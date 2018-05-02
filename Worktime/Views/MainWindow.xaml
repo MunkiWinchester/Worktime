@@ -1,0 +1,188 @@
+﻿<Metro:MetroWindow x:Class="Worktime.Views.MainWindow"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:D="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:Mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
+                   xmlns:ViewModels="clr-namespace:Worktime.ViewModels"
+                   xmlns:Business="clr-namespace:Worktime.Business"
+                   xmlns:Views1="clr-namespace:Worktime.Views"
+                   x:Name="_metroWindow"
+                   Title="Worktime"
+                   Width="325"
+                   Height="200"
+                   Mc:Ignorable="D"
+                   BorderBrush="{Binding ElementName=_metroWindow, Path=WindowTitleBrush}"
+                   Closing="MainWindow_OnClosing"
+                   Deactivated="MainWindow_OnDeactivated"
+                   Loaded="MainWindow_OnLoaded"
+                   NonActiveWindowTitleBrush="{Binding ElementName=_metroWindow, Path=WindowTitleBrush}"
+                   ResizeMode="CanMinimize"
+                   WindowStartupLocation="Manual">
+    <Metro:MetroWindow.DataContext>
+        <ViewModels:MainWindowViewModel />
+    </Metro:MetroWindow.DataContext>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo />
+    </Window.TaskbarItemInfo>
+    <Metro:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Grid Width="{TemplateBinding Width}"
+                  Height="{TemplateBinding Height}"
+                  Margin="4,4,0,4"
+                  Background="Transparent"
+                  RenderOptions.BitmapScalingMode="HighQuality"
+                  RenderOptions.EdgeMode="Aliased">
+                <Image Source="../Resources/Utilities-clock.ico" />
+            </Grid>
+        </DataTemplate>
+    </Metro:MetroWindow.IconTemplate>
+    <Metro:MetroWindow.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <Business:NegatedBooleanToVisibilityConverter x:Key="NegatedBooleanToVisibilityConverter" />
+            <Business:TimeSpanConverter x:Key="TimeSpanConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Metro:MetroWindow.Resources>
+    <Metro:MetroWindow.RightWindowCommands>
+        <Metro:WindowCommands>
+            <Button Command="{Binding SettingsClickedCommand}"
+                    CommandParameter="{Binding ElementName=_metroWindow}">
+                <Rectangle Width="20"
+                           Height="20"
+                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_settings}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+        </Metro:WindowCommands>
+    </Metro:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Button Grid.Row="0"
+                Grid.Column="0"
+                Command="{Binding StartCommand}"
+                Content="Start" />
+        <Button Grid.Row="0"
+                Grid.Column="1"
+                Command="{Binding StopCommand}"
+                Content="Stop" />
+        <Button Grid.Row="0"
+                Grid.Column="2"
+                Command="{Binding EditCommand}"
+                Content="Edit" />
+        <Label x:Name="_labelName"
+               Grid.Row="1"
+               Grid.Column="0"
+               Content="Name"
+               FontWeight="Bold" />
+        <Label Grid.Row="1"
+               Grid.Column="1"
+               Content="Clock in"
+               FontWeight="Bold" />
+        <Label Grid.Row="1"
+               Grid.Column="2"
+               Content="Cut"
+               FontWeight="Bold" />
+        <Viewbox Grid.Row="2"
+                 Grid.Column="0"
+                 Grid.ColumnSpan="3"
+                 Height="20"
+                 Visibility="{Binding ElementName=_labelError, Path=HasContent, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Label x:Name="_labelError"
+                   Content="{Binding Error}"
+                   Foreground="Red" />
+        </Viewbox>
+        <Grid Grid.Row="2"
+              Grid.Column="0"
+              Grid.ColumnSpan="3"
+              Height="16"
+              Visibility="{Binding ElementName=_labelError, Path=HasContent, Converter={StaticResource NegatedBooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0"
+                   Grid.Column="0"
+                   Padding="5,0,5,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Content="{Binding Employee.Name}">
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Content" Value="{Binding Employee.Name}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Employee.Name}"
+                                         Value="UNKNOWN">
+                                <Setter Property="Foreground" Value="Red" />
+                                <Setter Property="ToolTip" Value="Problem signing in!" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="1"
+                       Padding="5,0,5,0"
+                       Text="{Binding Employee.Begin, StringFormat='{}{0:hh\\:mm\\:ss}'}" />
+            <TextBlock Grid.Row="0"
+                       Grid.Column="2"
+                       Padding="5,0,5,0"
+                       Text="{Binding Employee.EstimatedCut, StringFormat='{}{0:hh\\:mm\\:ss}'}" />
+        </Grid>
+        <Label Grid.Row="4"
+               Grid.Column="0"
+               Content="Day"
+               FontWeight="Bold" />
+        <Label Grid.Row="4"
+               Grid.Column="1"
+               Content="Break"
+               FontWeight="Bold" />
+        <Label Grid.Row="4"
+               Grid.Column="2"
+               Content="Week"
+               FontWeight="Bold" />
+        <Views1:ProgressbarView Grid.Row="5"
+                               Grid.Column="0"
+                               Margin="5"
+                               FilledProgressBarColor="#8B2222"
+                               MaximumLabel="{Binding Employee.WorkTimeRegular, Converter={StaticResource TimeSpanConverter}}"
+                               MinimumLabel="{Binding Employee.WorkTimeReal, Converter={StaticResource TimeSpanConverter}}"
+                               ProgressBarColor="#228B22"
+                               ProgressBarValue="{Binding DayPercentageValue}" />
+        <Views1:ProgressbarView Grid.Row="5"
+                               Grid.Column="1"
+                               Margin="5"
+                               FilledProgressBarColor="#FFFF8800"
+                               MaximumLabel="{Binding Employee.BreakTimeRegular, Converter={StaticResource TimeSpanConverter}}"
+                               MinimumLabel="{Binding Employee.BreakTimeReal, Converter={StaticResource TimeSpanConverter}}"
+                               ProgressBarColor="#32CD32"
+                               ProgressBarValue="{Binding BreakPercentageValue}" />
+        <Views1:ProgressbarView Grid.Row="5"
+                               Grid.Column="2"
+                               Margin="5"
+                               FilledProgressBarColor="#640000"
+                               MaximumLabel="{Binding Employee.WeekWorkTimeRegular, Converter={StaticResource TimeSpanConverter}}"
+                               MinimumLabel="{Binding Employee.WeekWorkTimeReal, Converter={StaticResource TimeSpanConverter}}"
+                               ProgressBarColor="#006400"
+                               ProgressBarValue="{Binding WeekPercentageValue}" />
+    </Grid>
+</Metro:MetroWindow>

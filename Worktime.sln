@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worktime", "Worktime\Worktime.csproj", "{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}.Debug|x86.Build.0 = Debug|Any CPU
+		{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}.Release|x86.ActiveCfg = Release|Any CPU
+		{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F927A82-5CA9-4A9E-B688-7371E3000A48}
+	EndGlobalSection
+EndGlobal
