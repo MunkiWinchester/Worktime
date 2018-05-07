@@ -79,10 +79,12 @@
         <Button Grid.Row="0"
                 Grid.Column="0"
                 Command="{Binding StartCommand}"
+                IsEnabled="{Binding StartEnabled}"
                 Content="Start" />
         <Button Grid.Row="0"
                 Grid.Column="1"
                 Command="{Binding StopCommand}"
+                IsEnabled="{Binding StopEnabled}"
                 Content="Stop" />
         <Button Grid.Row="0"
                 Grid.Column="2"

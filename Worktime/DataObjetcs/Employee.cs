@@ -29,7 +29,7 @@ namespace Worktime.DataObjetcs
             get => _times;
             set
             {
-                _times = value;
+                _times = value ?? new ObservableCollection<Times>();
                 OnPropertyChanged();
             }
         }
@@ -73,7 +73,7 @@ namespace Worktime.DataObjetcs
                     .OrderBy(t => t.Begin)
                     .FirstOrDefault();
                 // ReSharper disable once MergeConditionalExpression
-                return timeFrame?.Begin != null ? timeFrame.Begin.TimeOfDay : new TimeSpan();
+                return timeFrame?.Begin != null ? timeFrame.Begin : new TimeSpan();
             }
         }
 
@@ -101,7 +101,7 @@ namespace Worktime.DataObjetcs
                         var first = todaysFrames[i];
                         var second = todaysFrames[i + 1];
 
-                        if (first.End != null) span += second.Begin - (DateTime) first.End;
+                        if (first.End != null) span += second.Begin - (TimeSpan) first.End;
                     }
 
                     return span;

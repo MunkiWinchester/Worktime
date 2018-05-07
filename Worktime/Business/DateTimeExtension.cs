@@ -35,5 +35,10 @@ namespace Worktime.Business
                 .AddMilliseconds(999);
             return end;
         }
+
+        public static TimeSpan ToDatelessTimeSpan(this DateTime dateTime)
+        {
+            return new TimeSpan(dateTime.Hour, dateTime.Minute, dateTime.Second);
+        }
     }
 }

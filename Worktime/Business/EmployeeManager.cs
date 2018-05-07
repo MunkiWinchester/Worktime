@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -36,11 +37,29 @@ namespace Worktime.Business
                 Console.WriteLine(e);
             }
 
-            if (employee.Times.All(t => t.Date.Iso8601WeekOfYear() != DateTime.Now.Iso8601WeekOfYear()))
-                employee.Times.Clear();
+            var isoWeek = DateTime.Now.Iso8601WeekOfYear();
+            if (employee.Times.Any(t => t.Date.Iso8601WeekOfYear() != isoWeek))
+            {
+                foreach (var employeeTime in employee.Times)
+                {
+                    if (employeeTime.Date.Iso8601WeekOfYear() != isoWeek)
+                        employee.Times.Remove(employeeTime);
+                }
+            }
 
-            //if (employee.TimeFrames.All(t => t.Begin.DayOfYear != DateTime.Now.DayOfYear))
-            //    employee.TimeFrames.Add(new TimeFrame {Begin = DateTime.Now});
+            employee.Times = new ObservableCollection<Times>(employee.Times.OrderBy(t => t.Date));
+            foreach (var employeeTime in employee.Times)
+            {
+                employeeTime.TimeFrames =
+                    new ObservableCollection<TimeFrame>(employeeTime.TimeFrames.OrderBy(tf => tf.Begin));
+            }
+
+            if (employee.Times.All(x => x.Date.DayOfYear != DateTime.Now.DayOfYear))
+                employee.Times.Add(new Times
+                {
+                    Date = DateTime.Now,
+                    TimeFrames = new ObservableCollection<TimeFrame> {new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan()}}
+                });
 
             employee.WeekWorkTimeRegular =
                 TimeSpan.FromMilliseconds((5 - CalculateHolidays()) * employee.WorkTimeRegular.TotalMilliseconds);
@@ -83,6 +102,34 @@ namespace Worktime.Business
                     p >= DateTime.Now.StartOfWeek(DayOfWeek.Monday) && p <= DateTime.Now.EndOfWeek(DayOfWeek.Monday))
                 .ToList();
             return days.Count;
+        }
+
+        public void AddStamp(Employee employee)
+        {
+            if(employee.Times.All(t => t.Date.DayOfYear != DateTime.Now.DayOfYear))
+            {
+                employee.Times.Add(new Times
+                {
+                    Date = DateTime.Now,
+                    TimeFrames = new ObservableCollection<TimeFrame> {new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan()}}
+                });
+            }
+            else
+            {
+                var time = employee.Times.FirstOrDefault(t => t.Date.DayOfYear == DateTime.Now.DayOfYear);
+                if (time != null)
+                {
+                    if(time.TimeFrames.All(tf => tf.End != null))
+                        time.TimeFrames.Add(new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan()});
+                    else
+                    {
+                        var timeframe = time.TimeFrames.FirstOrDefault(tf => tf.End == null);
+                        if(timeframe != null)
+                            timeframe.End = DateTime.Now.ToDatelessTimeSpan();
+                    }
+                }
+            }
+
         }
     }
 }

@@ -6,31 +6,38 @@ namespace Worktime.DataObjetcs
 {
     public class TimeFrame : ObservableObject
     {
-        private DateTime _begin;
-        private DateTime? _end;
+        private TimeSpan _begin;
+        private TimeSpan? _end;
 
-        public DateTime Begin
+        public TimeSpan Begin
         {
             get => _begin;
             set
             {
-                _begin = value;
+                _begin = new TimeSpan(value.Hours, value.Minutes, value.Seconds);
                 OnPropertyChanged();
             }
         }
 
-        public DateTime? End
+        public TimeSpan? End
         {
             get => _end;
             set
             {
-                _end = value;
+                if (value is TimeSpan notNullValue)
+                    _end = new TimeSpan(notNullValue.Hours, notNullValue.Minutes, notNullValue.Seconds);
+
+                else
+                    _end = null;
                 OnPropertyChanged();
             }
         }
 
         [JsonIgnore]
-        public TimeSpan Span => End != null ? (DateTime) End - Begin : DateTime.Now - Begin;
+        public TimeSpan Span =>
+            End != null
+                ? (TimeSpan) End - Begin
+                : new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second) - Begin;
 
         public override string ToString()
         {

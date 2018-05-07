@@ -18,7 +18,7 @@
     </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
+    <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -26,11 +26,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>\\emp-fs01\teamdata\Shared %28NoSecure%29\Fuer Hartholz\TWorkTime\</InstallUrl>
+    <SupportUrl>https://github.com/MunkiWinchester/Worktime/issues</SupportUrl>
+    <ErrorReportUrl>https://github.com/MunkiWinchester/Worktime/issues</ErrorReportUrl>
     <TargetCulture>en</TargetCulture>
     <PublisherName>Eike Stremlau</PublisherName>
     <SuiteName>Worktime</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>14</ApplicationRevision>
+    <ApplicationRevision>15</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -163,10 +166,8 @@
     </ApplicationDefinition>
     <Compile Include="Business\DateTimeExtension.cs" />
     <Compile Include="Business\EmployeeManager.cs" />
-    <Compile Include="Business\EnumExtensions.cs" />
     <Compile Include="Business\Converters.cs" />
     <Compile Include="DataObjetcs\Employee.cs" />
-    <Compile Include="DataObjetcs\ErrorEnum.cs" />
     <Compile Include="Business\Helpers.cs" />
     <Compile Include="DataObjetcs\TimeFrame.cs" />
     <Page Include="Resources\Custom\Accent\FireOrange.xaml">
@@ -260,7 +261,7 @@
     </None>
     <Resource Include="FodyWeavers.xml" />
     <Content Include="Resources\Employee.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>

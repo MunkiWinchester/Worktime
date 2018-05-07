@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Timers;
 using System.Windows.Input;
 using Worktime.Business;
@@ -37,6 +38,28 @@ namespace Worktime.ViewModels
         private Employee _employee;
         private string _error;
         private double _weekPercentageValue;
+        private bool _startEnabled = true;
+        private bool _stopEnabled;
+
+        public bool StartEnabled
+        {
+            get => _startEnabled;
+            set
+            {
+                _startEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public bool StopEnabled
+        {
+            get => _stopEnabled;
+            set
+            {
+                _stopEnabled = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         ///     Initializes a main window view model
@@ -129,12 +152,19 @@ namespace Worktime.ViewModels
         /// <summary>
         ///     Command to refresh the values
         /// </summary>
-        public ICommand StartCommand => new DelegateCommand(RefreshValues);
+        public ICommand StartCommand => new DelegateCommand(AddStamp);
+
+        private void AddStamp()
+        {
+            _employeeManager.AddStamp(_employee);
+            StartEnabled = StopEnabled;
+            StopEnabled = !StopEnabled;
+        }
 
         /// <summary>
         ///     Command to refresh the values
         /// </summary>
-        public ICommand StopCommand => new DelegateCommand(RefreshValues);
+        public ICommand StopCommand => new DelegateCommand(AddStamp);
 
         /// <summary>
         ///     String with a error message
@@ -193,15 +223,20 @@ namespace Worktime.ViewModels
         /// </summary>
         private void RefreshValues()
         {
-            var employee = new Employee();
-
             RunningStateChanged?.Invoke(false);
-            employee = _employeeManager.LoadEmployeeValues();
+            var employee = _employeeManager.LoadEmployeeValues();
             Error = null; // null, so Label.HasContent is false
 
             if (string.IsNullOrWhiteSpace(employee?.Name)) return;
 
             Employee = employee;
+
+            if (employee.Times.Where(t => t.Date.DayOfYear == DateTime.Now.DayOfYear)
+                .Any(tf => tf.TimeFrames.Any(t => t.End == null)))
+            {
+                StartEnabled = false;
+                StopEnabled = true;
+            }
             RefreshView();
         }
 

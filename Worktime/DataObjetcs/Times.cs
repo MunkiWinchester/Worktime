@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using MahApps.Metro.Controls;
 using Newtonsoft.Json;
 using WpfUtility;
@@ -17,7 +18,7 @@ namespace Worktime.DataObjetcs
             get => _timeFrames;
             set
             {
-                _timeFrames = value;
+                _timeFrames = value ?? new ObservableCollection<TimeFrame>();
                 OnPropertyChanged();
             }
         }
@@ -75,7 +76,8 @@ namespace Worktime.DataObjetcs
                         var first = TimeFrames[i];
                         var second = TimeFrames[i + 1];
 
-                        if (first.End != null) span += second.Begin - (DateTime) first.End;
+                        if (first.End != null)
+                            span += second.Begin - (TimeSpan) first.End;
                     }
 
                     return span;
@@ -83,6 +85,26 @@ namespace Worktime.DataObjetcs
 
                 return new TimeSpan(0);
             }
+        }
+
+        [JsonIgnore]
+        public ICommand AddTimeFrameCommand => new DelegateCommand(AddTimeFrame);
+
+        [JsonIgnore]
+        public ICommand RemoveTimeFrameCommand => new RelayCommand<TimeFrame>(RemoveTimeFrame);
+
+        private void RemoveTimeFrame(TimeFrame timeFrame)
+        {
+            var timeFrames = TimeFrames;
+            timeFrames.Remove(timeFrame);
+            TimeFrames = new ObservableCollection<TimeFrame>(timeFrames);
+        }
+
+        private void AddTimeFrame()
+        {
+            var timeFrames = TimeFrames;
+            timeFrames.Add(new TimeFrame());
+            TimeFrames = new ObservableCollection<TimeFrame>(timeFrames);
         }
 
         public override string ToString()
