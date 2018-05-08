@@ -11,12 +11,6 @@ namespace Worktime.ViewModels
 {
     public class MainWindowViewModel : ObservableObject
     {
-        /// <summary>
-        ///     The delegate for the password changed event
-        /// </summary>
-        /// <param name="passwordLength"></param>
-        public delegate void PasswordLoadedEvent(int passwordLength);
-
         // Events
         /// <summary>
         ///     The delegate for the progress changed event

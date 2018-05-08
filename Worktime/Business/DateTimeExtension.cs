@@ -36,6 +36,11 @@ namespace Worktime.Business
             return end;
         }
 
+        public static DateTime ToTimelessDateTime(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
+        }
+
         public static TimeSpan ToDatelessTimeSpan(this DateTime dateTime)
         {
             return new TimeSpan(dateTime.Hour, dateTime.Minute, dateTime.Second);

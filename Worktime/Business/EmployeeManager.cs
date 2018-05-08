@@ -16,8 +16,13 @@ namespace Worktime.Business
         {
             var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (location != null)
+#if DEBUG
+                return Path.Combine(location, "Resources",
+                    "TestEmployee.json");
+#else
                 return Path.Combine(location, "Resources",
                     "Employee.json");
+#endif
             return string.Empty;
         }
 
@@ -57,8 +62,11 @@ namespace Worktime.Business
             if (employee.Times.All(x => x.Date.DayOfYear != DateTime.Now.DayOfYear))
                 employee.Times.Add(new Times
                 {
-                    Date = DateTime.Now,
-                    TimeFrames = new ObservableCollection<TimeFrame> {new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan()}}
+                    Date = DateTime.Now.ToTimelessDateTime(),
+                    TimeFrames = new ObservableCollection<TimeFrame>
+                    {
+                        new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan(),IsCurrent = true}
+                    }
                 });
 
             employee.WeekWorkTimeRegular =
@@ -72,6 +80,8 @@ namespace Worktime.Business
             //    timeFrame.End = DateTime.Now;
             //}
 
+            SaveEmployeeValues(employee);
+
             return employee;
         }
 
@@ -81,7 +91,8 @@ namespace Worktime.Business
                 new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Include,
-                    Formatting = Formatting.Indented
+                    Formatting = Formatting.Indented,
+                    DateFormatHandling = DateFormatHandling.IsoDateFormat
                 });
             using (var sw = new StreamWriter(GetEmployeeJsonPath()))
             {
@@ -106,12 +117,15 @@ namespace Worktime.Business
 
         public void AddStamp(Employee employee)
         {
-            if(employee.Times.All(t => t.Date.DayOfYear != DateTime.Now.DayOfYear))
+            if (employee.Times.All(t => t.Date.DayOfYear != DateTime.Now.DayOfYear))
             {
                 employee.Times.Add(new Times
                 {
-                    Date = DateTime.Now,
-                    TimeFrames = new ObservableCollection<TimeFrame> {new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan()}}
+                    Date = DateTime.Now.ToTimelessDateTime(),
+                    TimeFrames = new ObservableCollection<TimeFrame>
+                    {
+                        new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan(), IsCurrent = true}
+                    }
                 });
             }
             else
@@ -119,17 +133,27 @@ namespace Worktime.Business
                 var time = employee.Times.FirstOrDefault(t => t.Date.DayOfYear == DateTime.Now.DayOfYear);
                 if (time != null)
                 {
-                    if(time.TimeFrames.All(tf => tf.End != null))
-                        time.TimeFrames.Add(new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan()});
+                    if (time.TimeFrames.All(tf => tf.End != null))
+                    {
+                        foreach (var timeFrame in time.TimeFrames.Where(tf => tf.IsCurrent))
+                        {
+                            timeFrame.IsCurrent = false;
+                        }
+                        
+                        time.TimeFrames.Add(new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan(), IsCurrent = true});
+                    }
                     else
                     {
                         var timeframe = time.TimeFrames.FirstOrDefault(tf => tf.End == null);
-                        if(timeframe != null)
+                        if (timeframe != null)
+                        {
                             timeframe.End = DateTime.Now.ToDatelessTimeSpan();
+                            timeframe.IsCurrent = false;
+                        }
                     }
                 }
             }
-
+            SaveEmployeeValues(employee);
         }
     }
 }

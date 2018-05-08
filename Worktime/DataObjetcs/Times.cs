@@ -18,8 +18,13 @@ namespace Worktime.DataObjetcs
             get => _timeFrames;
             set
             {
-                _timeFrames = value ?? new ObservableCollection<TimeFrame>();
-                OnPropertyChanged();
+                SetField(ref _timeFrames, value);
+                OnPropertyChanged(nameof(Span));
+                OnPropertyChanged(nameof(SpanCorrected));
+                OnPropertyChanged(nameof(SpanCorrectedExplanation));
+                OnPropertyChanged(nameof(BreakTimeReal));
+                OnPropertyChanged(nameof(BreakCalculated));
+                OnPropertyChanged(nameof(BreakDifference));
             }
         }
 
@@ -34,7 +39,8 @@ namespace Worktime.DataObjetcs
         }
 
         [JsonIgnore]
-        public TimeSpan Span => TimeSpan.FromSeconds(TimeFrames.Sum(t => t.Span.TotalSeconds));
+        public TimeSpan Span =>
+            TimeSpan.FromSeconds(TimeFrames.Where(t => t.Span != null).Sum(t => ((TimeSpan) t.Span).TotalSeconds));
 
         [JsonIgnore]
         public TimeSpan SpanCorrected => Span - BreakDifference;

@@ -108,6 +108,21 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
+                                                <Grid.Style>
+                                                    <Style TargetType="{x:Type Grid}">
+                                                        <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding End}"
+                                                                         Value="{x:Null}">
+                                                                <Setter Property="Background" Value="Red" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsCurrent}"
+                                                                         Value="True">
+                                                                <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Grid.Style>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width=".4*" />
                                                     <ColumnDefinition Width=".4*" />
@@ -126,7 +141,8 @@
                                                        VerticalContentAlignment="Center"
                                                        Content="{Binding Span, Converter={StaticResource TimeSpanConverter}}"
                                                        Style="{StaticResource LabelStyle}" />
-                                                <Button Grid.Column="3"
+                                                <Button x:Name="_buttonRemoveEntry"
+                                                        Grid.Column="3"
                                                         Width="40"
                                                         Height="40"
                                                         HorizontalAlignment="Center"
@@ -148,7 +164,8 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                                <Button Grid.Row="1"
+                                <Button x:Name="_buttonAddEntry"
+                                        Grid.Row="1"
                                         Grid.Column="0"
                                         Grid.ColumnSpan="3"
                                         Width="40"
@@ -192,7 +209,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Button x:Name="_buttonOk"
+        <Button x:Name="_buttonSave"
                 Grid.Row="2"
                 Grid.Column="0"
                 Width="50"

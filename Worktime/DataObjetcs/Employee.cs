@@ -29,8 +29,11 @@ namespace Worktime.DataObjetcs
             get => _times;
             set
             {
-                _times = value ?? new ObservableCollection<Times>();
-                OnPropertyChanged();
+                SetField(ref _times, value);
+                OnPropertyChanged(nameof(WeekWorkTimeReal));
+                OnPropertyChanged(nameof(BreakTimeReal));
+                OnPropertyChanged(nameof(EstimatedCut));
+                OnPropertyChanged(nameof(Begin));
             }
         }
 

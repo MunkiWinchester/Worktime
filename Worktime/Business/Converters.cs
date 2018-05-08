@@ -80,8 +80,8 @@ namespace Worktime.Business
         {
             if (value == null || parameter == null) return false;
 
-            if (decimal.TryParse(value.ToString(), out decimal valueParsed) &&
-                decimal.TryParse(parameter.ToString(), out decimal parameterParsed))
+            if (decimal.TryParse(value.ToString(), out var valueParsed) &&
+                decimal.TryParse(parameter.ToString(), out var parameterParsed))
             {
                 return valueParsed >= parameterParsed;
             }
@@ -111,9 +111,7 @@ namespace Worktime.Business
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is DateTime dt)
-            {
-                return new TimeSpan(dt.Hour, dt.Minute, dt.Second);
-            }
+                return dt.ToDatelessTimeSpan();
 
             return null;
         }
@@ -138,9 +136,7 @@ namespace Worktime.Business
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is DateTime dt)
-            {
-                return new DateTime(dt.Year, dt.Month, dt.Day);
-            }
+                return dt.ToTimelessDateTime();
 
             return null;
         }
