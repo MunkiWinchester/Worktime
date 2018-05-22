@@ -2,17 +2,29 @@
 
 namespace Worktime.Views
 {
+    /// <inheritdoc cref="System.Windows.Controls.UserControl" />
     /// <summary>
     ///     Interaction logic for SettingsWindow.xaml
     /// </summary>
     public partial class SettingsWindow
     {
+        /// <inheritdoc />
         /// <summary>
         ///     Creates a new instance
         /// </summary>
-        public SettingsWindow()
+        private SettingsWindow()
         {
             InitializeComponent();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Creates a new instance
+        /// </summary>
+        /// <param name="owner">Owner of the window</param>
+        public SettingsWindow(Window owner) : this()
+        {
+            Owner = owner;
         }
 
         /// <summary>

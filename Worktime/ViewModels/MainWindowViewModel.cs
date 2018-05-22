@@ -93,9 +93,14 @@ namespace Worktime.ViewModels
         /// </summary>
         public ICommand EditCommand => new RelayCommand<MainWindow>(EditTimeFrames);
 
+        /// <summary>
+        ///     Command to open the about view
+        /// </summary>
+        public ICommand AboutClickedCommand => new RelayCommand<MainWindow>(OpenAbout);
+
         private void EditTimeFrames(MainWindow mainWindow)
         {
-            var editView = new EditView {Owner = mainWindow, Employee = Employee};
+            var editView = new EditWindow(mainWindow, Employee);
             var result = editView.ShowDialog();
             if (result.HasValue && result.Value)
             {
@@ -264,7 +269,17 @@ Est. cut: {(int) employee.EstimatedCut.TotalHours:00}:{employee.EstimatedCut.Min
         /// <param name="mainWindow"></param>
         private static void OpenSettings(MainWindow mainWindow)
         {
-            var settings = new SettingsWindow {Owner = mainWindow};
+            var settings = new SettingsWindow(mainWindow);
+            settings.ShowDialog();
+        }
+
+        /// <summary>
+        ///     Opens the about window centered on the main window
+        /// </summary>
+        /// <param name="mainWindow"></param>
+        private static void OpenAbout(MainWindow mainWindow)
+        {
+            var settings = new AboutWindow(mainWindow);
             settings.ShowDialog();
         }
     }

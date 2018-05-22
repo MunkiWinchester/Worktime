@@ -11,6 +11,7 @@ using Application = System.Windows.Application;
 
 namespace Worktime.Views
 {
+    /// <inheritdoc cref="Window" />
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
@@ -31,6 +32,7 @@ namespace Worktime.Views
         /// </summary>
         private bool _endReached;
 
+        /// <inheritdoc />
         /// <summary>
         ///     Creates a new instance
         /// </summary>
@@ -66,6 +68,7 @@ namespace Worktime.Views
             WindowState = WindowState.Normal;
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Hides the window into the system tray
         /// </summary>

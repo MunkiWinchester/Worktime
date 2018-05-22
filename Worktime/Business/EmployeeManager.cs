@@ -42,14 +42,11 @@ namespace Worktime.Business
                 Console.WriteLine(e);
             }
 
-            var isoWeek = DateTime.Now.Iso8601WeekOfYear();
-            if (employee.Times.Any(t => t.Date.Iso8601WeekOfYear() != isoWeek))
+            var removeItems = employee.Times.Where(t => t.Date.Iso8601WeekOfYear() != DateTime.Now.Iso8601WeekOfYear())
+                .ToList();
+            foreach (var removeItem in removeItems)
             {
-                foreach (var employeeTime in employee.Times)
-                {
-                    if (employeeTime.Date.Iso8601WeekOfYear() != isoWeek)
-                        employee.Times.Remove(employeeTime);
-                }
+                employee.Times.Remove(removeItem);
             }
 
             employee.Times = new ObservableCollection<Times>(employee.Times.OrderBy(t => t.Date));
@@ -65,7 +62,7 @@ namespace Worktime.Business
                     Date = DateTime.Now.ToTimelessDateTime(),
                     TimeFrames = new ObservableCollection<TimeFrame>
                     {
-                        new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan(),IsCurrent = true}
+                        new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan(), IsCurrent = true}
                     }
                 });
 
@@ -74,11 +71,6 @@ namespace Worktime.Business
 
             employee.BreakTimeRegular = new TimeSpan(0,
                 Convert.ToInt32(Math.Floor(employee.WorkTimeRegular.TotalHours / 3) * 15), 0);
-
-            //foreach (var timeFrame in employee.TimeFrames.Where(t => !t.Finished))
-            //{
-            //    timeFrame.End = DateTime.Now;
-            //}
 
             SaveEmployeeValues(employee);
 

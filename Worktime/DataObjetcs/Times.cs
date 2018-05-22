@@ -58,8 +58,11 @@ namespace Worktime.DataObjetcs
         {
             get
             {
-                if (Span.TotalHours > 9) return new TimeSpan(0, 45, 0);
-                return Span.TotalHours > 6 ? new TimeSpan(0, 30, 0) : new TimeSpan(0);
+                if (Span.TotalHours > 9.5)
+                    return new TimeSpan(0, 45, 0);
+                return Span.TotalHours > 6.5 ?
+                    new TimeSpan(0, 30, 0) :
+                    new TimeSpan(0);
             }
         }
 

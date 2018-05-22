@@ -3,6 +3,7 @@ using System.Windows.Media;
 
 namespace Worktime.Views
 {
+    /// <inheritdoc cref="System.Windows.Controls.UserControl" />
     /// <summary>
     ///     Interaction logic for ProgressbarView.xaml
     /// </summary>
@@ -40,6 +41,7 @@ namespace Worktime.Views
         public static readonly DependencyProperty MaximumLabelProperty = DependencyProperty.Register(
             nameof(MaximumLabel), typeof(string), typeof(ProgressbarView), new PropertyMetadata(""));
 
+        /// <inheritdoc />
         /// <summary>
         ///     Creates a new instance
         /// </summary>

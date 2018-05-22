@@ -60,6 +60,17 @@
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
+            <Button Command="{Binding AboutClickedCommand}"
+                    CommandParameter="{Binding ElementName=_metroWindow}">
+                <Rectangle Width="10"
+                           Height="20"
+                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_information}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
         </Metro:WindowCommands>
     </Metro:MetroWindow.RightWindowCommands>
     <Grid>
@@ -89,6 +100,7 @@
         <Button Grid.Row="0"
                 Grid.Column="2"
                 Command="{Binding EditCommand}"
+                CommandParameter="{Binding ElementName=_metroWindow}"
                 Content="Edit" />
         <Label x:Name="_labelName"
                Grid.Row="1"
