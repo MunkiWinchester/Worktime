@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Shell;
@@ -13,28 +12,28 @@ namespace Worktime.Views
 {
     /// <inheritdoc cref="Window" />
     /// <summary>
-    ///     Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
         /// <summary>
-        ///     Contains the notify icon
+        /// Contains the notify icon
         /// </summary>
         private readonly NotifyIcon _notifyIcon;
 
         /// <summary>
-        ///     Contains the view model
+        /// Contains the view model
         /// </summary>
         private readonly MainWindowViewModel _viewModel = new MainWindowViewModel();
 
         /// <summary>
-        ///     true if the timer reached the end, otherwise false
+        /// true if the timer reached the end, otherwise false
         /// </summary>
         private bool _endReached;
 
         /// <inheritdoc />
         /// <summary>
-        ///     Creates a new instance
+        /// Creates a new instance
         /// </summary>
         public MainWindow()
         {
@@ -50,7 +49,7 @@ namespace Worktime.Views
             _notifyIcon =
                 new NotifyIcon
                 {
-                    Icon = new Icon("./Resources/Utilities-clock.ico"),
+                    Icon = Properties.Resources.Utilities_clock,
                     Visible = true,
                     Text = @"Worktime!"
                 };
@@ -58,7 +57,7 @@ namespace Worktime.Views
         }
 
         /// <summary>
-        ///     Shows the window (from the system tray)
+        /// Shows the window (from the system tray)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
@@ -70,7 +69,7 @@ namespace Worktime.Views
 
         /// <inheritdoc />
         /// <summary>
-        ///     Hides the window into the system tray
+        /// Hides the window into the system tray
         /// </summary>
         /// <param name="e"></param>
         protected override void OnStateChanged(EventArgs e)
@@ -96,7 +95,8 @@ namespace Worktime.Views
 
             try
             {
-                ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(Settings.Default.SelectedAccent),
+                ThemeManager.ChangeAppStyle(Application.Current,
+                    ThemeManager.GetAccent(Settings.Default.SelectedAccent),
                     ThemeManager.GetAppTheme(Settings.Default.SelectedTheme));
             }
             catch (Exception exception)
@@ -110,7 +110,7 @@ namespace Worktime.Views
         }
 
         /// <summary>
-        ///     Occurs when the running state was changed
+        /// Occurs when the running state was changed
         /// </summary>
         /// <param name="running">The running state</param>
         private void _viewModel_RunningStateChanged(bool running)
@@ -128,7 +128,7 @@ namespace Worktime.Views
         }
 
         /// <summary>
-        ///     Occurs when the progress of the progress bar was changed
+        /// Occurs when the progress of the progress bar was changed
         /// </summary>
         /// <param name="percent">The percent value</param>
         /// <param name="notifyIconText"></param>

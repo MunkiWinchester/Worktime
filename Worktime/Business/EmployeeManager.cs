@@ -17,17 +17,17 @@ namespace Worktime.Business
             var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (location != null)
 #if DEBUG
-                return Path.Combine(location, "Resources",
+                return Path.Combine(location,
                     "TestEmployee.json");
 #else
-                return Path.Combine(location, "Resources",
+                return Path.Combine(location,
                     "Employee.json");
 #endif
             return string.Empty;
         }
 
         /// <summary>
-        ///     Returns the values for the given personal number
+        /// Returns the values for the given personal number
         /// </summary>
         /// <returns></returns>
         public Employee LoadEmployeeValues()
@@ -45,16 +45,12 @@ namespace Worktime.Business
             var removeItems = employee.Times.Where(t => t.Date.Iso8601WeekOfYear() != DateTime.Now.Iso8601WeekOfYear())
                 .ToList();
             foreach (var removeItem in removeItems)
-            {
                 employee.Times.Remove(removeItem);
-            }
 
             employee.Times = new ObservableCollection<Times>(employee.Times.OrderBy(t => t.Date));
             foreach (var employeeTime in employee.Times)
-            {
                 employeeTime.TimeFrames =
                     new ObservableCollection<TimeFrame>(employeeTime.TimeFrames.OrderBy(tf => tf.Begin));
-            }
 
             if (employee.Times.All(x => x.Date.DayOfYear != DateTime.Now.DayOfYear))
                 employee.Times.Add(new Times
@@ -124,15 +120,16 @@ namespace Worktime.Business
             {
                 var time = employee.Times.FirstOrDefault(t => t.Date.DayOfYear == DateTime.Now.DayOfYear);
                 if (time != null)
-                {
                     if (time.TimeFrames.All(tf => tf.End != null))
                     {
                         foreach (var timeFrame in time.TimeFrames.Where(tf => tf.IsCurrent))
-                        {
                             timeFrame.IsCurrent = false;
-                        }
-                        
-                        time.TimeFrames.Add(new TimeFrame {Begin = DateTime.Now.ToDatelessTimeSpan(), IsCurrent = true});
+
+                        time.TimeFrames.Add(new TimeFrame
+                        {
+                            Begin = DateTime.Now.ToDatelessTimeSpan(),
+                            IsCurrent = true
+                        });
                     }
                     else
                     {
@@ -143,8 +140,8 @@ namespace Worktime.Business
                             timeframe.IsCurrent = false;
                         }
                     }
-                }
             }
+
             SaveEmployeeValues(employee);
         }
     }

@@ -5,7 +5,7 @@ namespace Worktime.Business
     internal static class Helpers
     {
         /// <summary>
-        ///     Returns the calculated percentage of the actual and the regular time
+        /// Returns the calculated percentage of the actual and the regular time
         /// </summary>
         /// <param name="actualTime"></param>
         /// <param name="regularTime"></param>

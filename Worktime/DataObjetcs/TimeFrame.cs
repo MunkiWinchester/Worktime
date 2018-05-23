@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Worktime.Business;
-using WpfUtility;
+using WpfUtility.Services;
 
 namespace Worktime.DataObjetcs
 {

@@ -2,17 +2,17 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
-using WpfUtility;
+using WpfUtility.Services;
 
 namespace Worktime.DataObjetcs
 {
     public class Employee : ObservableObject
     {
+        private TimeSpan _breakTimeRegular = new TimeSpan(0, 30, 0);
         private string _name = "UNKNOWN";
         private ObservableCollection<Times> _times = new ObservableCollection<Times>();
-        private TimeSpan _workTimeRegular = new TimeSpan(8, 0, 0);
-        private TimeSpan _breakTimeRegular = new TimeSpan(0, 30, 0);
         private TimeSpan _weekWorkTimeRegular = new TimeSpan(40, 0, 0);
+        private TimeSpan _workTimeRegular = new TimeSpan(8, 0, 0);
 
         public string Name
         {

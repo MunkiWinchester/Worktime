@@ -4,13 +4,13 @@ namespace Worktime.Views
 {
     /// <inheritdoc cref="System.Windows.Controls.UserControl" />
     /// <summary>
-    ///     Interaction logic for SettingsWindow.xaml
+    /// Interaction logic for SettingsWindow.xaml
     /// </summary>
     public partial class SettingsWindow
     {
         /// <inheritdoc />
         /// <summary>
-        ///     Creates a new instance
+        /// Creates a new instance
         /// </summary>
         private SettingsWindow()
         {
@@ -19,7 +19,7 @@ namespace Worktime.Views
 
         /// <inheritdoc />
         /// <summary>
-        ///     Creates a new instance
+        /// Creates a new instance
         /// </summary>
         /// <param name="owner">Owner of the window</param>
         public SettingsWindow(Window owner) : this()
@@ -28,7 +28,7 @@ namespace Worktime.Views
         }
 
         /// <summary>
-        ///     Sets the DialogResult to true to close the window
+        /// Sets the DialogResult to true to close the window
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

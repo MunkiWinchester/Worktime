@@ -5,6 +5,7 @@
                    xmlns:D="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:Mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
+                   xmlns:Services="clr-namespace:WpfUtility.Services;assembly=WpfUtility"
                    xmlns:ViewModels="clr-namespace:Worktime.ViewModels"
                    xmlns:Views1="clr-namespace:Worktime.Views"
                    x:Name="_metroWindow"
@@ -22,6 +23,16 @@
     <Metro:MetroWindow.DataContext>
         <ViewModels:MainWindowViewModel />
     </Metro:MetroWindow.DataContext>
+    <Metro:MetroWindow.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <Services:NegatedBooleanToVisibilityConverter x:Key="NegatedBooleanToVisibilityConverter" />
+            <Business:TimeSpanConverter x:Key="TimeSpanConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Metro:MetroWindow.Resources>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo />
     </Window.TaskbarItemInfo>
@@ -33,20 +44,10 @@
                   Background="Transparent"
                   RenderOptions.BitmapScalingMode="HighQuality"
                   RenderOptions.EdgeMode="Aliased">
-                <Image Source="../Resources/Utilities-clock.ico" />
+                <Image Source="{StaticResource WorktimeIcon}" />
             </Grid>
         </DataTemplate>
     </Metro:MetroWindow.IconTemplate>
-    <Metro:MetroWindow.Resources>
-        <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <Business:NegatedBooleanToVisibilityConverter x:Key="NegatedBooleanToVisibilityConverter" />
-            <Business:TimeSpanConverter x:Key="TimeSpanConverter" />
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Resources/Icons.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Metro:MetroWindow.Resources>
     <Metro:MetroWindow.RightWindowCommands>
         <Metro:WindowCommands>
             <Button Command="{Binding SettingsClickedCommand}"

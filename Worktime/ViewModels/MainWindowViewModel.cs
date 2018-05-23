@@ -5,7 +5,7 @@ using System.Windows.Input;
 using Worktime.Business;
 using Worktime.DataObjetcs;
 using Worktime.Views;
-using WpfUtility;
+using WpfUtility.Services;
 
 namespace Worktime.ViewModels
 {
@@ -13,50 +13,30 @@ namespace Worktime.ViewModels
     {
         // Events
         /// <summary>
-        ///     The delegate for the progress changed event
+        /// The delegate for the progress changed event
         /// </summary>
         /// <param name="percent">The percent value</param>
         public delegate void ProgressEvent(double percent, string notifyIconText);
 
         /// <summary>
-        ///     The delegate for the running state event
+        /// The delegate for the running state event
         /// </summary>
         /// <param name="running">true if the timer is running, otherwise false</param>
         public delegate void RunningStateEvent(bool running);
 
         private readonly EmployeeManager _employeeManager;
-        private readonly Timer _timer30Sec;
         private readonly Timer _timer30Min;
+        private readonly Timer _timer30Sec;
         private double _breakPercentageValue;
         private double _dayPercentageValue;
         private Employee _employee;
         private string _error;
-        private double _weekPercentageValue;
         private bool _startEnabled = true;
         private bool _stopEnabled;
-
-        public bool StartEnabled
-        {
-            get => _startEnabled;
-            set
-            {
-                _startEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        public bool StopEnabled
-        {
-            get => _stopEnabled;
-            set
-            {
-                _stopEnabled = value;
-                OnPropertyChanged();
-            }
-        }
+        private double _weekPercentageValue;
 
         /// <summary>
-        ///     Initializes a main window view model
+        /// Initializes a main window view model
         /// </summary>
         public MainWindowViewModel()
         {
@@ -70,8 +50,28 @@ namespace Worktime.ViewModels
             // Activate those timers in the InitControl()
         }
 
+        public bool StartEnabled
+        {
+            get => _startEnabled;
+            set
+            {
+                _startEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool StopEnabled
+        {
+            get => _stopEnabled;
+            set
+            {
+                _stopEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
-        ///     Employee
+        /// Employee
         /// </summary>
         public Employee Employee
         {
@@ -84,33 +84,22 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Command to open the settings
+        /// Command to open the settings
         /// </summary>
         public ICommand SettingsClickedCommand => new RelayCommand<MainWindow>(OpenSettings);
 
         /// <summary>
-        ///     Command to open the edit view
+        /// Command to open the edit view
         /// </summary>
         public ICommand EditCommand => new RelayCommand<MainWindow>(EditTimeFrames);
 
         /// <summary>
-        ///     Command to open the about view
+        /// Command to open the about view
         /// </summary>
         public ICommand AboutClickedCommand => new RelayCommand<MainWindow>(OpenAbout);
 
-        private void EditTimeFrames(MainWindow mainWindow)
-        {
-            var editView = new EditWindow(mainWindow, Employee);
-            var result = editView.ShowDialog();
-            if (result.HasValue && result.Value)
-            {
-                _employeeManager.SaveEmployeeValues(Employee);
-                RefreshView();
-            }
-        }
-
         /// <summary>
-        ///     Percentage value of the day done
+        /// Percentage value of the day done
         /// </summary>
         public double DayPercentageValue
         {
@@ -123,7 +112,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Percentage value of the break done
+        /// Percentage value of the break done
         /// </summary>
         public double BreakPercentageValue
         {
@@ -136,7 +125,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Percentage value of the week done
+        /// Percentage value of the week done
         /// </summary>
         public double WeekPercentageValue
         {
@@ -149,24 +138,17 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Command to refresh the values
+        /// Command to refresh the values
         /// </summary>
         public ICommand StartCommand => new DelegateCommand(AddStamp);
 
-        private void AddStamp()
-        {
-            _employeeManager.AddStamp(_employee);
-            StartEnabled = StopEnabled;
-            StopEnabled = !StopEnabled;
-        }
-
         /// <summary>
-        ///     Command to refresh the values
+        /// Command to refresh the values
         /// </summary>
         public ICommand StopCommand => new DelegateCommand(AddStamp);
 
         /// <summary>
-        ///     String with a error message
+        /// String with a error message
         /// </summary>
         public string Error
         {
@@ -178,8 +160,26 @@ namespace Worktime.ViewModels
             }
         }
 
+        private void EditTimeFrames(MainWindow mainWindow)
+        {
+            var editView = new EditWindow(mainWindow, Employee);
+            var result = editView.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                _employeeManager.SaveEmployeeValues(Employee);
+                RefreshView();
+            }
+        }
+
+        private void AddStamp()
+        {
+            _employeeManager.AddStamp(_employee);
+            StartEnabled = StopEnabled;
+            StopEnabled = !StopEnabled;
+        }
+
         /// <summary>
-        ///     Occures when the 30 min timer ticks
+        /// Occures when the 30 min timer ticks
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="elapsedEventArgs"></param>
@@ -189,7 +189,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Occures when the 1 sec timer ticks
+        /// Occures when the 1 sec timer ticks
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="elapsedEventArgs"></param>
@@ -199,17 +199,17 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Occurs when the progress of the progress bar changed
+        /// Occurs when the progress of the progress bar changed
         /// </summary>
         public event ProgressEvent ProgressChanged;
 
         /// <summary>
-        ///     Occurs when the running state is changed
+        /// Occurs when the running state is changed
         /// </summary>
         public event RunningStateEvent RunningStateChanged;
 
         /// <summary>
-        ///     Inits the window
+        /// Inits the window
         /// </summary>
         public void InitControl()
         {
@@ -218,7 +218,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Refreshes the values
+        /// Refreshes the values
         /// </summary>
         private void RefreshValues()
         {
@@ -236,11 +236,12 @@ namespace Worktime.ViewModels
                 StartEnabled = false;
                 StopEnabled = true;
             }
+
             RefreshView();
         }
 
         /// <summary>
-        ///     Refreshes the view
+        /// Refreshes the view
         /// </summary>
         private void RefreshView()
         {
@@ -264,7 +265,7 @@ Est. cut: {(int) employee.EstimatedCut.TotalHours:00}:{employee.EstimatedCut.Min
         }
 
         /// <summary>
-        ///     Opens the settings window centered on the main window
+        /// Opens the settings window centered on the main window
         /// </summary>
         /// <param name="mainWindow"></param>
         private static void OpenSettings(MainWindow mainWindow)
@@ -274,7 +275,7 @@ Est. cut: {(int) employee.EstimatedCut.TotalHours:00}:{employee.EstimatedCut.Min
         }
 
         /// <summary>
-        ///     Opens the about window centered on the main window
+        /// Opens the about window centered on the main window
         /// </summary>
         /// <param name="mainWindow"></param>
         private static void OpenAbout(MainWindow mainWindow)

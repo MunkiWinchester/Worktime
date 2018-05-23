@@ -6,7 +6,7 @@ using System.Windows.Input;
 using MahApps.Metro;
 using PublicHoliday;
 using Worktime.Properties;
-using WpfUtility;
+using WpfUtility.Services;
 
 namespace Worktime.ViewModels
 {
@@ -16,23 +16,41 @@ namespace Worktime.ViewModels
 
         private ObservableCollection<string> _accents;
 
-        private string _selectedAccent;
-
-        private string _selectedTheme;
-
         private bool _isAlwaysOnTop;
 
-        private ObservableCollection<string> _themes;
+        private string _selectedAccent;
 
         /// <summary>
         /// Property for the selected german state
         /// </summary>
         private GermanPublicHoliday.States _selectedState;
 
+        private string _selectedTheme;
+
         /// <summary>
         /// Property for the differen states of germany
         /// </summary>
         private ObservableCollection<GermanPublicHoliday.States> _states;
+
+        private ObservableCollection<string> _themes;
+
+        /// <summary>
+        /// Initializes a settings window view model
+        /// </summary>
+        public SettingsWindowViewModel()
+        {
+            Themes = new ObservableCollection<string>(ThemeManager.AppThemes.Select(x => x.Name));
+            Accents = new ObservableCollection<string>(ThemeManager.Accents.Select(x => x.Name));
+            States = new ObservableCollection<GermanPublicHoliday.States>(
+                ((GermanPublicHoliday.States[]) Enum.GetValues(typeof(GermanPublicHoliday.States))).Where(x =>
+                    x != GermanPublicHoliday.States.ALL));
+            _initial = true;
+            SelectedAccent = Settings.Default.SelectedAccent;
+            SelectedTheme = Settings.Default.SelectedTheme;
+            IsAlwaysOnTop = Settings.Default.IsAlwaysOnTop;
+            SelectedState = States.FirstOrDefault(x => x.ToString().Equals(Settings.Default.SelectedState));
+            _initial = false;
+        }
 
         /// <summary>
         /// Property for the selected german state
@@ -57,40 +75,22 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a settings window view model
-        /// </summary>
-        public SettingsWindowViewModel()
-        {
-            Themes = new ObservableCollection<string>(ThemeManager.AppThemes.Select(x => x.Name));
-            Accents = new ObservableCollection<string>(ThemeManager.Accents.Select(x => x.Name));
-            States = new ObservableCollection<GermanPublicHoliday.States>(
-                ((GermanPublicHoliday.States[]) Enum.GetValues(typeof(GermanPublicHoliday.States))).Where(x =>
-                    x != GermanPublicHoliday.States.ALL));
-            _initial = true;
-            SelectedAccent = Settings.Default.SelectedAccent;
-            SelectedTheme = Settings.Default.SelectedTheme;
-            IsAlwaysOnTop = Settings.Default.IsAlwaysOnTop;
-            SelectedState = States.FirstOrDefault(x => x.ToString().Equals(Settings.Default.SelectedState));
-            _initial = false;
-        }
-
-        /// <summary>
-        ///     Command to save the settings
+        /// Command to save the settings
         /// </summary>
         public ICommand SaveCommand => new DelegateCommand(SaveSettings);
 
         /// <summary>
-        ///     Command to cancle the settings
+        /// Command to cancle the settings
         /// </summary>
         public ICommand CancelCommand => new DelegateCommand(ResetSettings);
 
         /// <summary>
-        ///     Command to switch the style of the app
+        /// Command to switch the style of the app
         /// </summary>
         public ICommand SwitchCommand => new DelegateCommand(SwitchAppStyle);
 
         /// <summary>
-        ///     Collection with the different accents
+        /// Collection with the different accents
         /// </summary>
         public ObservableCollection<string> Accents
         {
@@ -99,7 +99,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Collection with the different themes
+        /// Collection with the different themes
         /// </summary>
         public ObservableCollection<string> Themes
         {
@@ -108,7 +108,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Value of the selected accent
+        /// Value of the selected accent
         /// </summary>
         public string SelectedAccent
         {
@@ -122,7 +122,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Value of the selected theme
+        /// Value of the selected theme
         /// </summary>
         public string SelectedTheme
         {
@@ -136,7 +136,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Value if the app should always be on top
+        /// Value if the app should always be on top
         /// </summary>
         public bool IsAlwaysOnTop
         {
@@ -149,7 +149,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Switches the theme and/or accent of the app
+        /// Switches the theme and/or accent of the app
         /// </summary>
         private void SwitchAppStyle()
         {
@@ -170,7 +170,7 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        ///     Saves the selected accent and theme to the settings
+        /// Saves the selected accent and theme to the settings
         /// </summary>
         private void SaveSettings()
         {

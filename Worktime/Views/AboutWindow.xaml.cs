@@ -8,13 +8,13 @@ namespace Worktime.Views
 {
     /// <inheritdoc cref="System.Windows.Controls.UserControl" />
     /// <summary>
-    ///     Interaction logic for SettingsWindow.xaml
+    /// Interaction logic for SettingsWindow.xaml
     /// </summary>
     public partial class AboutWindow
     {
         /// <inheritdoc />
         /// <summary>
-        ///     Creates a new instance
+        /// Creates a new instance
         /// </summary>
         private AboutWindow()
         {
@@ -23,7 +23,7 @@ namespace Worktime.Views
 
         /// <inheritdoc />
         /// <summary>
-        ///     Creates a new instance
+        /// Creates a new instance
         /// </summary>
         /// <param name="owner">Owner of the window</param>
         public AboutWindow(Window owner) : this()
@@ -33,7 +33,7 @@ namespace Worktime.Views
         }
 
         /// <summary>
-        ///     Sets the DialogResult to true to close the window
+        /// Sets the DialogResult to true to close the window
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -47,10 +47,10 @@ namespace Worktime.Views
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
-        
+
         /// <summary>
-        ///     Loads the version number from the click once manifest
-        ///     or returns "1.0.0.0" if not click once published
+        /// Loads the version number from the click once manifest
+        /// or returns "1.0.0.0" if not click once published
         /// </summary>
         /// <returns>The version of the assembly</returns>
         private static Version GetVersion()

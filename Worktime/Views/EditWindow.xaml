@@ -38,7 +38,7 @@
                   Background="Transparent"
                   RenderOptions.BitmapScalingMode="HighQuality"
                   RenderOptions.EdgeMode="Aliased">
-                <Image Source="../Resources/Utilities-clock.ico" />
+                <Image Source="{StaticResource WorktimeIcon}" />
             </Grid>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>

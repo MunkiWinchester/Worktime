@@ -10,7 +10,6 @@
                       Width="300"
                       Height="190"
                       Mc:Ignorable="D"
-                      
                       BorderBrush="{Binding ElementName=_metroWindow, Path=NonActiveWindowTitleBrush}"
                       BorderThickness="1"
                       NonActiveWindowTitleBrush="{Binding ElementName=_metroWindow, Path=WindowTitleBrush}"
@@ -35,7 +34,7 @@
                   Background="Transparent"
                   RenderOptions.BitmapScalingMode="HighQuality"
                   RenderOptions.EdgeMode="Aliased">
-                <Image Source="../Resources/Utilities-clock.ico" />
+                <Image Source="{StaticResource WorktimeIcon}" />
             </Grid>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>

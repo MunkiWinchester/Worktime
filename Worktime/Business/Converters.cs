@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
-using WpfUtility;
 
 namespace Worktime.Business
 {
     /// <inheritdoc />
     /// <summary>
-    ///     Converts a timespan to a string in the format hh:mm
-    ///     Or trys to parse the string into a timespan (loss of seconds, days etc.)
+    /// Converts a timespan to a string in the format hh:mm
+    /// Or trys to parse the string into a timespan (loss of seconds, days etc.)
     /// </summary>
     public class TimeSpanConverter : IValueConverter
     {
         /// <inheritdoc />
         /// <summary>
-        ///     Converts a timespan to a string in the format hh:mm
+        /// Converts a timespan to a string in the format hh:mm
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>
@@ -25,16 +23,14 @@ namespace Worktime.Business
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is TimeSpan ts)
-            {
                 return $@"{(int) ts.TotalHours:00}:{ts.Minutes:00}";
-            }
 
             return new TimeSpan().ToString(@"hh\:mm");
         }
 
         /// <inheritdoc />
         /// <summary>
-        ///     Trys to parse the string into a timespan (loss of seconds, days etc.)
+        /// Trys to parse the string into a timespan (loss of seconds, days etc.)
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>
@@ -46,20 +42,6 @@ namespace Worktime.Business
             var result = new TimeSpan();
             if (value != null) TimeSpan.TryParse(value.ToString(), out result);
             return result;
-        }
-    }
-
-    /// <summary>
-    ///     Converts true to Visibility.Collapsed or false to Visibility.Visible
-    /// </summary>
-    public sealed class NegatedBooleanToVisibilityConverter : BooleanConverter<Visibility>
-    {
-        /// <summary>
-        ///     Converts true to Visibility.Collapsed or false to Visibility.Visible
-        /// </summary>
-        public NegatedBooleanToVisibilityConverter() :
-            base(Visibility.Collapsed, Visibility.Visible)
-        {
         }
     }
 
@@ -82,9 +64,7 @@ namespace Worktime.Business
 
             if (decimal.TryParse(value.ToString(), out var valueParsed) &&
                 decimal.TryParse(parameter.ToString(), out var parameterParsed))
-            {
                 return valueParsed >= parameterParsed;
-            }
 
             return false;
         }
@@ -144,9 +124,7 @@ namespace Worktime.Business
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is DateTime dt)
-            {
                 return dt;
-            }
             return null;
         }
     }

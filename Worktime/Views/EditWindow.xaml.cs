@@ -12,15 +12,9 @@ namespace Worktime.Views
         public static readonly DependencyProperty EmployeeProperty = DependencyProperty.Register(
             nameof(Employee), typeof(Employee), typeof(EditWindow), new PropertyMetadata(default(Employee)));
 
-        public Employee Employee
-        {
-            get => (Employee) GetValue(EmployeeProperty);
-            set => SetValue(EmployeeProperty, value);
-        }
-
         /// <inheritdoc />
         /// <summary>
-        ///     Creates a new instance
+        /// Creates a new instance
         /// </summary>
         private EditWindow()
         {
@@ -29,7 +23,7 @@ namespace Worktime.Views
 
         /// <inheritdoc />
         /// <summary>
-        ///     Creates a new instance
+        /// Creates a new instance
         /// </summary>
         /// <param name="owner">Owner of the window</param>
         /// <param name="employee"></param>
@@ -39,8 +33,14 @@ namespace Worktime.Views
             Employee = employee;
         }
 
+        public Employee Employee
+        {
+            get => (Employee) GetValue(EmployeeProperty);
+            set => SetValue(EmployeeProperty, value);
+        }
+
         /// <summary>
-        ///     Sets the DialogResult to true to close the window
+        /// Sets the DialogResult to true to close the window
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
