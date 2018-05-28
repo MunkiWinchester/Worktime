@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using MahApps.Metro.Controls;
 using Newtonsoft.Json;
 using WpfUtility.Services;
 
@@ -46,12 +45,21 @@ namespace Worktime.DataObjetcs
         public TimeSpan SpanCorrected => Span - BreakDifference;
 
         [JsonIgnore]
-        public string SpanCorrectedExplanation =>
-            $@"{Span:hh\:mm} - ( | {BreakCalculated:hh\:mm}{
-                    (BreakDifference.TotalMinutes.IsZero()
-                        ? " - 00:30"
-                        : $" - {BreakTimeReal:hh\\:mm}")
-                } | ) =";
+        public string SpanCorrectedExplanation
+        {
+            get
+            {
+                var result = $"{Span:hh\\:mm} - ";
+
+                if (BreakTimeReal > BreakCalculated)
+                    result += $"({BreakTimeReal:hh\\:mm} - {BreakCalculated:hh\\:mm})";
+                else
+                    result += $"({BreakCalculated:hh\\:mm} - {BreakTimeReal:hh\\:mm})";
+
+                result += " = ";
+                return result;
+            }
+        }
 
         [JsonIgnore]
         public TimeSpan BreakCalculated
@@ -67,10 +75,18 @@ namespace Worktime.DataObjetcs
         }
 
         [JsonIgnore]
-        public TimeSpan BreakDifference =>
-            BreakTimeReal > BreakCalculated ? 
-                BreakTimeReal - BreakCalculated : 
-                BreakCalculated - BreakTimeReal;
+        public TimeSpan BreakDifference
+        {
+            get
+            {
+                var diff = BreakTimeReal - BreakCalculated;
+                if (diff.Ticks > 0)
+                    return BreakTimeReal - BreakCalculated;
+                if (diff.Ticks < 0)
+                    return BreakCalculated - BreakTimeReal;
+                return new TimeSpan(0);
+            }
+        }
 
         [JsonIgnore]
         public TimeSpan BreakTimeReal

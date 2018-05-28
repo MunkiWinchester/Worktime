@@ -188,6 +188,10 @@
                                         BorderBrush="{Binding ElementName=_label, Path=Foreground}"
                                         BorderThickness="1" />
                                 <Label Grid.Row="3"
+                                       Grid.Column="1"
+                                       Content="{Binding BreakTimeReal, Converter={StaticResource TimeSpanConverter}}"
+                                       Style="{StaticResource LabelStyle}" />
+                                <Label Grid.Row="3"
                                        Grid.Column="2"
                                        Content="{Binding Span, Converter={StaticResource TimeSpanConverter}}"
                                        Style="{StaticResource LabelStyle}" />
