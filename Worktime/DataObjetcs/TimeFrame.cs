@@ -11,6 +11,11 @@ namespace Worktime.DataObjetcs
         private TimeSpan? _end;
         private bool _isCurrent;
 
+		public TimeFrame()
+		{
+			Begin = DateTime.Now.ToDatelessTimeSpan();
+		}
+
         public bool IsCurrent
         {
             get => _isCurrent;

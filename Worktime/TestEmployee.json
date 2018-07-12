@@ -1,68 +1,68 @@
 {
-    "Name": "Eike Stremlau",
-    "Times": [
+  "Name": "Eike",
+  "Times": [
+			{
+				"TimeFrames": [
+					{
+						"IsCurrent": false,
+						"Begin": "08:33:00",
+						"End": "13:25:00"
+					},
+					{
+						"IsCurrent": false,
+						"Begin": "13:55:00",
+						"End": null
+					}
+				],
+				"Date": "2018-07-09T00:00:00"
+			},
+    {
+      "TimeFrames": [
         {
-            "TimeFrames": [
-                {
-                    "IsCurrent": false,
-                    "Begin": "07:51:00",
-                    "End": "11:51:00"
-                },
-                {
-                    "IsCurrent": false,
-                    "Begin": "12:49:00",
-                    "End": "18:33:00"
-                }
-            ],
-            "Date": "2018-05-30T00:00:00"
+          "IsCurrent": false,
+          "Begin": "08:33:00",
+          "End": "11:54:00"
         },
         {
-            "TimeFrames": [
-                {
-                    "IsCurrent": false,
-                    "Begin": "07:27:00",
-                    "End": "08:43:00"
-                },
-                {
-                    "IsCurrent": false,
-                    "Begin": "08:50:00",
-                    "End": "13:03:00"
-                },
-                {
-                    "IsCurrent": false,
-                    "Begin": "13:06:00",
-                    "End": "14:13:00"
-                },
-                {
-                    "IsCurrent": false,
-                    "Begin": "14:19:00",
-                    "End": "15:03:00"
-                },
-                {
-                    "IsCurrent": false,
-                    "Begin": "15:08:00",
-                    "End": "16:54:00"
-                }
-            ],
-            "Date": "2018-05-29T00:00:00"
-        },
-        {
-            "TimeFrames": [
-                {
-                    "IsCurrent": false,
-                    "Begin": "10:08:44",
-                    "End": "15:33:06"
-                },
-                {
-                    "IsCurrent": true,
-                    "Begin": "15:36:27",
-                    "End": null
-                }
-            ],
-            "Date": "2018-05-28T00:00:00"
+          "IsCurrent": false,
+          "Begin": "15:05:00",
+          "End": "17:06:00"
         }
-    ],
-    "WorkTimeRegular": "08:00:00",
-    "BreakTimeRegular": "00:30:00",
-    "WeekWorkTimeRegular": "1.08:00:00"
+      ],
+      "Date": "2018-07-10T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:14:00",
+          "End": "15:37:00"
+        },
+        {
+          "IsCurrent": false,
+          "Begin": "16:07:00",
+          "End": "16:45:00"
+        }
+      ],
+      "Date": "2018-07-11T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:26:00",
+          "End": "11:54:00"
+        },
+        {
+          "IsCurrent": true,
+          "Begin": "12:52:00",
+          "End": null
+        }
+      ],
+      "Date": "2018-07-12T00:00:00"
+    }
+  ],
+  "WorkTimeRegular": "08:00:00",
+  "BreakTimeRegular": "00:30:00",
+  "WeekWorkTimeRegular": "1.16:00:00"
 }

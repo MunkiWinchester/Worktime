@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Shell;
 using MahApps.Metro;
+using Worktime.Business;
 using Worktime.Properties;
 using Worktime.ViewModels;
 using Application = System.Windows.Application;
@@ -39,7 +40,8 @@ namespace Worktime.Views
         {
             InitializeComponent();
 
-            Top = Settings.Default.Top;
+			UiTheme.InitializeTheme();
+			Top = Settings.Default.Top;
             Left = Settings.Default.Left;
 
             DataContext = _viewModel;
