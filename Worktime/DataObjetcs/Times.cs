@@ -121,14 +121,28 @@ namespace Worktime.DataObjetcs
         private void RemoveTimeFrame(TimeFrame timeFrame)
         {
             var timeFrames = TimeFrames;
-            timeFrames.Remove(timeFrame);
+			timeFrames.Remove(timeFrame);
+			if (timeFrame.IsCurrent)
+			{
+				var frame = timeFrames.OrderByDescending(x => x.Begin).FirstOrDefault();
+				if (frame != null)
+					frame.IsCurrent = true;
+			}
             TimeFrames = new ObservableCollection<TimeFrame>(timeFrames);
         }
 
         private void AddTimeFrame()
         {
             var timeFrames = TimeFrames;
-            timeFrames.Add(new TimeFrame());
+			var newFrame = new TimeFrame();
+			if (Date.DayOfYear == DateTime.Now.DayOfYear)
+			{
+				var frame = timeFrames.FirstOrDefault(x => x.IsCurrent);
+				if(frame != null)
+					frame.IsCurrent = false;
+				newFrame.IsCurrent = true;
+			}
+            timeFrames.Add(newFrame);
             TimeFrames = new ObservableCollection<TimeFrame>(timeFrames);
         }
 
