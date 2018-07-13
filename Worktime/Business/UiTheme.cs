@@ -13,9 +13,9 @@ using System.Reflection;
 
 namespace Worktime.Business
 {
-	public class UiTheme
+	public static class UiTheme
 	{
-		private const string WindowAccentName = "Windows Accent";
+		public const string WindowAccentName = "Windows Accent";
 		private const string DefaultAccentName = "Crimson";
 		private static Color _currentWindowsAccent = SystemParameters.WindowGlassColor;
 
@@ -36,7 +36,7 @@ namespace Worktime.Business
 			ThemeManager.ChangeAppStyle(Application.Current, CurrentAccent, CurrentTheme);
 		}
 
-		public static void CreateWindowsAccentStyle(bool changeImmediately = false)
+		public static void CreateWindowsAccentStyle(bool changeImmediately = false, AppTheme theme = null)
 		{
 			var resourceDictionary = new ResourceDictionary();
 
@@ -96,7 +96,7 @@ namespace Worktime.Business
 			oldWindowsAccent.Resources.Source = resourceDictionary.Source;
 
 			if (changeImmediately)
-				ThemeManager.ChangeAppStyle(Application.Current, CurrentAccent, CurrentTheme);
+				ThemeManager.ChangeAppStyle(Application.Current, CurrentAccent, theme ?? CurrentTheme);
 		}
 
 		private static string LoadAssemblyDirectory()

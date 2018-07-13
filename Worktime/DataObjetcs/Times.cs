@@ -51,8 +51,8 @@ namespace Worktime.DataObjetcs
             {
                 var result = $"{Span:hh\\:mm} - ";
 
-                if (BreakTimeReal > BreakCalculated)
-                    result += $"({BreakTimeReal:hh\\:mm} - {BreakCalculated:hh\\:mm})";
+                if (BreakTimeReal >= BreakCalculated)
+                    result += $"({BreakTimeReal:hh\\:mm} - {BreakTimeReal:hh\\:mm})";
                 else
                     result += $"({BreakCalculated:hh\\:mm} - {BreakTimeReal:hh\\:mm})";
 
@@ -66,7 +66,7 @@ namespace Worktime.DataObjetcs
         {
             get
             {
-                if (Span.TotalHours > 9.5)
+                if (Span.TotalHours > 9.75)
                     return new TimeSpan(0, 45, 0);
                 return Span.TotalHours > 6.5 ?
                     new TimeSpan(0, 30, 0) :
@@ -79,12 +79,10 @@ namespace Worktime.DataObjetcs
         {
             get
             {
-                var diff = BreakTimeReal - BreakCalculated;
-                if (diff.Ticks > 0)
-                    return BreakTimeReal - BreakCalculated;
-                if (diff.Ticks < 0)
+				if (BreakTimeReal >= BreakCalculated)
+					return new TimeSpan(0);
+				else
                     return BreakCalculated - BreakTimeReal;
-                return new TimeSpan(0);
             }
         }
 

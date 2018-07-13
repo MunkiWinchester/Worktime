@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro;
 using PublicHoliday;
+using Worktime.Business;
 using Worktime.Properties;
 using WpfUtility.Services;
 
@@ -153,10 +154,15 @@ namespace Worktime.ViewModels
         /// </summary>
         private void SwitchAppStyle()
         {
-            if (!_initial)
-                ThemeManager.ChangeAppStyle(Application.Current,
-                    ThemeManager.GetAccent(_selectedAccent),
-                    ThemeManager.GetAppTheme(_selectedTheme));
+			if (!_initial)
+			{
+				if (SelectedAccent == UiTheme.WindowAccentName)
+					UiTheme.CreateWindowsAccentStyle(true, ThemeManager.GetAppTheme(_selectedTheme));
+				else
+					ThemeManager.ChangeAppStyle(Application.Current,
+						ThemeManager.GetAccent(_selectedAccent),
+						ThemeManager.GetAppTheme(_selectedTheme));
+			}
         }
 
         /// <summary>
