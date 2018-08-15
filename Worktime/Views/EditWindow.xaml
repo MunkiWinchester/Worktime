@@ -1,56 +1,69 @@
-﻿<Controls:MetroWindow x:Class="Worktime.Views.EditWindow"
-                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:Business="clr-namespace:Worktime.Business"
-                      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      xmlns:D="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:DataObjetcs="clr-namespace:Worktime.DataObjetcs"
-                      xmlns:Mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                      xmlns:Xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-                      x:Name="_metroWindow"
-                      Title="Edit time frames"
-                      Width="400"
-                      Height="400"
-                      Mc:Ignorable="D"
-                      BorderBrush="{Binding ElementName=_metroWindow, Path=NonActiveWindowTitleBrush}"
-                      BorderThickness="1"
-                      NonActiveWindowTitleBrush="{Binding ElementName=_metroWindow, Path=WindowTitleBrush}"
-                      ResizeMode="NoResize"
-                      ShowCloseButton="False"
-                      WindowStartupLocation="CenterOwner">
+﻿<Controls:MetroWindow
+    x:Class="Worktime.Views.EditWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Business="clr-namespace:Worktime.Business"
+    xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:D="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:DataObjetcs="clr-namespace:Worktime.DataObjetcs"
+    xmlns:Mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    x:Name="_metroWindow"
+    Title="Edit time frames"
+    Width="400"
+    Height="400"
+    Mc:Ignorable="D"
+    BorderBrush="{Binding ElementName=_metroWindow, Path=NonActiveWindowTitleBrush}"
+    BorderThickness="1"
+    NonActiveWindowTitleBrush="{Binding ElementName=_metroWindow, Path=WindowTitleBrush}"
+    ResizeMode="CanResize"
+    ShowCloseButton="False"
+    ShowMaxRestoreButton="False"
+    ShowMinButton="False"
+    WindowStartupLocation="CenterOwner">
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Business:TimeSpanConverter x:Key="TimeSpanConverter" />
-            <Style x:Key="LabelStyle"
-                   TargetType="Label">
+            <Style x:Key="LabelStyle" TargetType="Label">
                 <Setter Property="HorizontalAlignment" Value="Right" />
             </Style>
         </ResourceDictionary>
     </Controls:MetroWindow.Resources>
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
-            <Grid Width="{TemplateBinding Width}"
-                  Height="{TemplateBinding Height}"
-                  Margin="4,4,0,4"
-                  Background="Transparent"
-                  RenderOptions.BitmapScalingMode="HighQuality"
-                  RenderOptions.EdgeMode="Aliased">
+            <Grid
+                Width="{TemplateBinding Width}"
+                Height="{TemplateBinding Height}"
+                Margin="4,4,0,4"
+                Background="Transparent"
+                RenderOptions.BitmapScalingMode="HighQuality"
+                RenderOptions.EdgeMode="Aliased">
                 <Image Source="{StaticResource WorktimeIcon}" />
             </Grid>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <Button Click="ButtonCancle_OnClick">
-                <Rectangle Width="15"
-                           Height="15"
-                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+            <Button Click="ButtonMaximize_OnClick">
+                <Rectangle
+                    Width="15"
+                    Height="15"
+                    Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                     Visual="{StaticResource appbar_close}" />
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_window_restore}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <Button Click="ButtonCancle_OnClick">
+                <Rectangle
+                    Width="15"
+                    Height="15"
+                    Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_close}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
@@ -62,28 +75,28 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Label x:Name="_label"
-               Visibility="Hidden" />
-        <Xctk:WatermarkTextBox Grid.Row="0"
-                               Grid.Column="0"
-                               Margin="5"
-                               Foreground="{Binding ElementName=_label, Path=Foreground}"
-                               KeepWatermarkOnGotFocus="True"
-                               Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:MetroWindow}}, Path=Employee.Name}"
-                               ToolTip="Please enter your name or your name will be UNKNOWN"
-                               Watermark="Name" />
-        <ScrollViewer Grid.Row="1"
-                      Grid.Column="0"
-                      VerticalScrollBarVisibility="Auto">
-            <ItemsControl x:Name="_mainItemsControl"
-                          Margin="5"
-                          ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:MetroWindow}}, Path=Employee.Times}"
-                          Tag="{Binding .}">
+        <Label x:Name="_label" Visibility="Hidden" />
+        <ComboBox
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="5,5,5,0"
+            ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:MetroWindow}}, Path=EmployeeValues}"
+            SelectedItem="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:MetroWindow}}, Path=Employee}" />
+        <ScrollViewer
+            Grid.Row="1"
+            Grid.Column="0"
+            VerticalScrollBarVisibility="Auto">
+            <ItemsControl
+                x:Name="_mainItemsControl"
+                Margin="5"
+                ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:MetroWindow}}, Path=Employee.Times}"
+                Tag="{Binding .}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <GroupBox Header="{Binding Date}"
-                                  HeaderStringFormat="dd.MM.yy - dddd"
-                                  Tag="{Binding Date}">
+                        <GroupBox
+                            Header="{Binding Date}"
+                            HeaderStringFormat="dd.MM.yy - dddd"
+                            Tag="{Binding Date}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width=".4*" />
@@ -97,11 +110,12 @@
                                     <RowDefinition />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <ItemsControl Grid.Row="0"
-                                              Grid.Column="0"
-                                              Grid.ColumnSpan="3"
-                                              ItemsSource="{Binding TimeFrames}"
-                                              Tag="{Binding .}">
+                                <ItemsControl
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="3"
+                                    ItemsSource="{Binding TimeFrames}"
+                                    Tag="{Binding .}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -109,12 +123,10 @@
                                                     <Style TargetType="{x:Type Grid}">
                                                         <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding End}"
-                                                                         Value="{x:Null}">
+                                                            <DataTrigger Binding="{Binding End}" Value="{x:Null}">
                                                                 <Setter Property="Background" Value="Red" />
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding IsCurrent}"
-                                                                         Value="True">
+                                                            <DataTrigger Binding="{Binding IsCurrent}" Value="True">
                                                                 <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
@@ -126,34 +138,38 @@
                                                     <ColumnDefinition Width=".2*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <Controls:TimePicker Grid.Column="0"
-                                                                     Margin="5,2,5,2"
-                                                                     Culture="de-DE"
-                                                                     SelectedTime="{Binding Begin}" />
-                                                <Controls:TimePicker Grid.Column="1"
-                                                                     Margin="5,2,5,2"
-                                                                     Culture="de-DE"
-                                                                     SelectedTime="{Binding End}" />
-                                                <Label Grid.Column="2"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Span, Converter={StaticResource TimeSpanConverter}}"
-                                                       Style="{StaticResource LabelStyle}" />
-                                                <Button x:Name="_buttonRemoveEntry"
-                                                        Grid.Column="3"
-                                                        Width="40"
-                                                        Height="40"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=Tag.(DataObjetcs:Times.RemoveTimeFrameCommand)}"
-                                                        CommandParameter="{Binding .}"
-                                                        Style="{DynamicResource MetroCircleButtonStyle}"
-                                                        ToolTip="Remove this entry">
-                                                    <Rectangle Width="20"
-                                                               Height="20"
-                                                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                                <Controls:TimePicker
+                                                    Grid.Column="0"
+                                                    Margin="5,2,5,2"
+                                                    Culture="de-DE"
+                                                    SelectedTime="{Binding Begin}" />
+                                                <Controls:TimePicker
+                                                    Grid.Column="1"
+                                                    Margin="5,2,5,2"
+                                                    Culture="de-DE"
+                                                    SelectedTime="{Binding End}" />
+                                                <Label
+                                                    Grid.Column="2"
+                                                    VerticalContentAlignment="Center"
+                                                    Content="{Binding Span, Converter={StaticResource TimeSpanConverter}}"
+                                                    Style="{StaticResource LabelStyle}" />
+                                                <Button
+                                                    x:Name="_buttonRemoveEntry"
+                                                    Grid.Column="3"
+                                                    Width="40"
+                                                    Height="40"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=Tag.(DataObjetcs:Times.RemoveTimeFrameCommand)}"
+                                                    CommandParameter="{Binding .}"
+                                                    Style="{DynamicResource MetroCircleButtonStyle}"
+                                                    ToolTip="Remove this entry">
+                                                    <Rectangle
+                                                        Width="20"
+                                                        Height="20"
+                                                        Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                                                         <Rectangle.OpacityMask>
-                                                            <VisualBrush Stretch="Uniform"
-                                                                         Visual="{StaticResource appbar_delete}" />
+                                                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_delete}" />
                                                         </Rectangle.OpacityMask>
                                                     </Rectangle>
                                                 </Button>
@@ -161,63 +177,70 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                                <Button x:Name="_buttonAddEntry"
-                                        Grid.Row="1"
-                                        Grid.Column="0"
-                                        Grid.ColumnSpan="3"
-                                        Width="40"
-                                        Height="40"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Command="{Binding AddTimeFrameCommand}"
-                                        Style="{DynamicResource MetroCircleButtonStyle}"
-                                        ToolTip="Add a new entry">
-                                    <Rectangle Width="20"
-                                               Height="20"
-                                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                <Button
+                                    x:Name="_buttonAddEntry"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="3"
+                                    Width="40"
+                                    Height="40"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding AddTimeFrameCommand}"
+                                    Style="{DynamicResource MetroCircleButtonStyle}"
+                                    ToolTip="Add a new entry">
+                                    <Rectangle
+                                        Width="20"
+                                        Height="20"
+                                        Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                                         <Rectangle.OpacityMask>
-                                            <VisualBrush Stretch="Uniform"
-                                                         Visual="{StaticResource appbar_list_add_below}" />
+                                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_list_add_below}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
                                 </Button>
-                                <Border Grid.Row="2"
-                                        Grid.Column="0"
-                                        Grid.ColumnSpan="3"
-                                        Margin="3"
-                                        BorderBrush="{Binding ElementName=_label, Path=Foreground}"
-                                        BorderThickness="1" />
-                                <Label Grid.Row="3"
-                                       Grid.Column="1"
-                                       Content="{Binding BreakTimeReal, Converter={StaticResource TimeSpanConverter}}"
-                                       Style="{StaticResource LabelStyle}" />
-                                <Label Grid.Row="3"
-                                       Grid.Column="2"
-                                       Content="{Binding Span, Converter={StaticResource TimeSpanConverter}}"
-                                       Style="{StaticResource LabelStyle}" />
-                                <Label Grid.Row="4"
-                                       Grid.Column="0"
-                                       Grid.ColumnSpan="2"
-                                       Content="{Binding SpanCorrectedExplanation}"
-                                       Style="{StaticResource LabelStyle}" />
-                                <Label Grid.Row="4"
-                                       Grid.Column="2"
-                                       Content="{Binding SpanCorrected, Converter={StaticResource TimeSpanConverter}}"
-                                       Style="{StaticResource LabelStyle}" />
+                                <Border
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="3"
+                                    Margin="3"
+                                    BorderBrush="{Binding ElementName=_label, Path=Foreground}"
+                                    BorderThickness="1" />
+                                <Label
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Content="{Binding BreakTimeReal, Converter={StaticResource TimeSpanConverter}}"
+                                    Style="{StaticResource LabelStyle}" />
+                                <Label
+                                    Grid.Row="3"
+                                    Grid.Column="2"
+                                    Content="{Binding Span, Converter={StaticResource TimeSpanConverter}}"
+                                    Style="{StaticResource LabelStyle}" />
+                                <Label
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Content="{Binding SpanCorrectedExplanation}"
+                                    Style="{StaticResource LabelStyle}" />
+                                <Label
+                                    Grid.Row="4"
+                                    Grid.Column="2"
+                                    Content="{Binding SpanCorrected, Converter={StaticResource TimeSpanConverter}}"
+                                    Style="{StaticResource LabelStyle}" />
                             </Grid>
                         </GroupBox>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Button x:Name="_buttonSave"
-                Grid.Row="2"
-                Grid.Column="0"
-                Width="50"
-                Height="20"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Click="ButtonOk_OnClick"
-                Content="Save" />
+        <Button
+            x:Name="_buttonSave"
+            Grid.Row="2"
+            Grid.Column="0"
+            Width="50"
+            Height="20"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Click="ButtonOk_OnClick"
+            Content="Save" />
     </Grid>
 </Controls:MetroWindow>

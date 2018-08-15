@@ -1,0 +1,81 @@
+{
+  "IsoWeek": {
+    "Number": 28,
+    "Year": 2018
+  },
+  "Times": [
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:33:00",
+          "End": "13:25:00"
+        },
+        {
+          "IsCurrent": false,
+          "Begin": "13:55:00",
+          "End": "17:06:00"
+        }
+      ],
+      "Date": "2018-07-09T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:33:00",
+          "End": "15:05:00"
+        },
+        {
+          "IsCurrent": false,
+          "Begin": "15:33:00",
+          "End": "17:06:00"
+        }
+      ],
+      "Date": "2018-07-10T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:14:00",
+          "End": "15:37:00"
+        },
+        {
+          "IsCurrent": false,
+          "Begin": "16:07:00",
+          "End": "16:45:00"
+        }
+      ],
+      "Date": "2018-07-11T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:26:00",
+          "End": "11:54:00"
+        },
+        {
+          "IsCurrent": false,
+          "Begin": "12:52:00",
+          "End": "17:29:00"
+        }
+      ],
+      "Date": "2018-07-12T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "07:57:00",
+          "End": "16:13:00"
+        }
+      ],
+      "Date": "2018-07-13T00:00:00"
+    }
+  ],
+  "WorkTimeRegular": "08:00:00",
+  "BreakTimeRegular": "00:30:00",
+  "WeekWorkTimeRegular": "1.16:00:00"
+}

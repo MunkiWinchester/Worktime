@@ -1,52 +1,88 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PublicHoliday;
 using Worktime.DataObjetcs;
+using Worktime.Extension;
 using Worktime.Properties;
 
 namespace Worktime.Business
 {
-    public class EmployeeManager
+    public static class EmployeeManager
     {
-        public static string GetEmployeeJsonPath()
+        private static DirectoryInfo JsonSaveLocation
         {
-            var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (location != null)
+            get
+            {
+
+                var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                DirectoryInfo dirInfo = null;
+                if (location != null)
+                {
 #if DEBUG
-                return Path.Combine(location,
-                    "TestEmployee.json");
+                    dirInfo = new DirectoryInfo(Path.Combine(location, "Data", "Test"));
 #else
-                return Path.Combine(location,
-                    "Employee.json");
+                    dirInfo = new DirectoryInfo(Path.Combine(location, "Data"));
 #endif
-            return string.Empty;
+                }
+                return dirInfo;
+            }
+        }
+
+        public static List<Employee> GetEmployeeValuesFromJson()
+        {
+            var conDic = new ConcurrentDictionary<string, Employee>();
+            try
+            {
+                var dirInfo = JsonSaveLocation;
+                if (dirInfo != null)
+                {
+                    var fileInfos = dirInfo.GetFiles("*.json", SearchOption.TopDirectoryOnly);
+                    Parallel.ForEach(fileInfos,
+                        fileInfo =>
+                        {
+                            var name = Path.GetFileNameWithoutExtension(fileInfo.Name);
+                            if (!conDic.ContainsKey(name))
+                            {
+                                var employee = JsonConvert.DeserializeObject<Employee>(File.ReadAllText(fileInfo.FullName));
+                                conDic.TryAdd(name, employee);
+                            }
+                        });
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return conDic.Values.ToList();
+        }
+
+        private static Employee GetCurrentEmployeeValueFromJson()
+        {
+            var dirInfo = JsonSaveLocation;
+            if (dirInfo != null)
+            {
+                var fileInfos = dirInfo.GetFiles(DateTime.Now.Iso8601WeekOfYear().FileName);
+                if (fileInfos.Any())
+                    return JsonConvert.DeserializeObject<Employee>(File.ReadAllText(fileInfos[0].FullName));
+            }
+            return new Employee();
         }
 
         /// <summary>
         /// Returns the values for the given personal number
         /// </summary>
         /// <returns></returns>
-        public Employee LoadEmployeeValues()
+        public static Employee LoadEmployeeValues()
         {
-            var employee = new Employee();
-            try
-            {
-                employee = JsonConvert.DeserializeObject<Employee>(File.ReadAllText(GetEmployeeJsonPath()));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
 
-            var removeItems = employee.Times.Where(t => t.Date.Iso8601WeekOfYear() != DateTime.Now.Iso8601WeekOfYear())
-                .ToList();
-            foreach (var removeItem in removeItems)
-                employee.Times.Remove(removeItem);
-
+            var employee = GetCurrentEmployeeValueFromJson();
             employee.Times = new ObservableCollection<Times>(employee.Times.OrderBy(t => t.Date));
             foreach (var employeeTime in employee.Times)
                 employeeTime.TimeFrames =
@@ -73,7 +109,22 @@ namespace Worktime.Business
             return employee;
         }
 
-        public void SaveEmployeeValues(Employee employee)
+        public static TimeSpan CalculateTotalOvertime(Employee employee)
+        {
+            var overtime = new TimeSpan(0);
+            var employeeValues = GetEmployeeValuesFromJson();
+            foreach (var employeeValue in employeeValues.Where(ev => !ev.IsoWeek.Equals(employee.IsoWeek)))
+            {
+                overtime += employeeValue.WeekWorkTimeReal - employeeValue.WeekWorkTimeRegular;
+            }
+            foreach (var time in employee.Times)
+            {
+                overtime += time.SpanCorrected - employee.WorkTimeRegular;
+            }
+            return overtime;
+        }
+
+        public static void SaveEmployeeValues(Employee employee)
         {
             var json = JsonConvert.SerializeObject(employee,
                 new JsonSerializerSettings
@@ -82,13 +133,15 @@ namespace Worktime.Business
                     Formatting = Formatting.Indented,
                     DateFormatHandling = DateFormatHandling.IsoDateFormat
                 });
-            using (var sw = new StreamWriter(GetEmployeeJsonPath()))
-            {
-                sw.Write(json);
-            }
+            var dirInfo = JsonSaveLocation;
+            if (dirInfo != null)
+                using (var sw = new StreamWriter(Path.Combine(dirInfo.FullName, employee.IsoWeek.FileName)))
+                {
+                    sw.Write(json);
+                }
         }
 
-        public int CalculateHolidays()
+        public static int CalculateHolidays()
         {
             var calendar = new GermanPublicHoliday
             {
@@ -103,7 +156,7 @@ namespace Worktime.Business
             return days.Count;
         }
 
-        public void AddStamp(Employee employee)
+        public static void AddStamp(Employee employee)
         {
             if (employee.Times.All(t => t.Date.DayOfYear != DateTime.Now.DayOfYear))
             {

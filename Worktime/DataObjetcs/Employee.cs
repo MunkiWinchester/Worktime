@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
+using Worktime.Business;
+using Worktime.Extension;
 using WpfUtility.Services;
 
 namespace Worktime.DataObjetcs
@@ -9,17 +11,17 @@ namespace Worktime.DataObjetcs
     public class Employee : ObservableObject
     {
         private TimeSpan _breakTimeRegular = new TimeSpan(0, 30, 0);
-        private string _name = "UNKNOWN";
+        private IsoWeek _isoWeek = new IsoWeek();
         private ObservableCollection<Times> _times = new ObservableCollection<Times>();
         private TimeSpan _weekWorkTimeRegular = new TimeSpan(40, 0, 0);
         private TimeSpan _workTimeRegular = new TimeSpan(8, 0, 0);
 
-        public string Name
+        public IsoWeek IsoWeek
         {
-            get => _name;
+            get => _isoWeek;
             set
             {
-                _name = value;
+                _isoWeek = value;
                 OnPropertyChanged();
             }
         }
@@ -30,10 +32,12 @@ namespace Worktime.DataObjetcs
             set
             {
                 SetField(ref _times, value);
-                OnPropertyChanged(nameof(WeekWorkTimeReal));
+                OnPropertyChanged(nameof(Begin));
                 OnPropertyChanged(nameof(BreakTimeReal));
                 OnPropertyChanged(nameof(EstimatedCut));
-                OnPropertyChanged(nameof(Begin));
+                OnPropertyChanged(nameof(Overtime));
+                OnPropertyChanged(nameof(WeekWorkTimeReal));
+                OnPropertyChanged(nameof(WorkTimeReal));
             }
         }
 
@@ -44,6 +48,7 @@ namespace Worktime.DataObjetcs
             {
                 _workTimeRegular = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Overtime));
             }
         }
 
@@ -54,6 +59,7 @@ namespace Worktime.DataObjetcs
             {
                 _breakTimeRegular = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Overtime));
             }
         }
 
@@ -64,8 +70,13 @@ namespace Worktime.DataObjetcs
             {
                 _weekWorkTimeRegular = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Overtime));
             }
         }
+
+        #region [JsonIgnore]
+        [JsonIgnore]
+        public bool HasChanges { get; set; }
 
         [JsonIgnore]
         public TimeSpan Begin
@@ -79,6 +90,9 @@ namespace Worktime.DataObjetcs
                 return timeFrame?.Begin != null ? timeFrame.Begin : new TimeSpan();
             }
         }
+
+        [JsonIgnore]
+        public TimeSpan Overtime => EmployeeManager.CalculateTotalOvertime(this);
 
         [JsonIgnore]
         public TimeSpan EstimatedCut =>
@@ -104,7 +118,7 @@ namespace Worktime.DataObjetcs
                         var first = todaysFrames[i];
                         var second = todaysFrames[i + 1];
 
-                        if (first.End != null) span += second.Begin - (TimeSpan) first.End;
+                        if (first.End != null) span += second.Begin - (TimeSpan)first.End;
                     }
 
                     return span;
@@ -117,10 +131,11 @@ namespace Worktime.DataObjetcs
         [JsonIgnore]
         public TimeSpan WeekWorkTimeReal =>
             TimeSpan.FromSeconds(Times.Sum(t => t.SpanCorrected.TotalSeconds)); // TODO: Pausenzeiten beachten!
+        #endregion [JsonIgnore]
 
         public override string ToString()
         {
-            return $"{Name} --- {WeekWorkTimeReal:hh:mm}h";
+            return $"{IsoWeek} - {WeekWorkTimeReal.ToFormatedString()} of {WeekWorkTimeRegular.ToFormatedString()}";
         }
     }
 }

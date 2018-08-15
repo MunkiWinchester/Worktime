@@ -1,0 +1,66 @@
+{
+  "IsoWeek": {
+    "Number": 30,
+    "Year": 2018
+  },
+  "Times": [
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "07:54:00",
+          "End": "16:26:00"
+        }
+      ],
+      "Date": "2018-07-23T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:06:00",
+          "End": "16:54:00"
+        }
+      ],
+      "Date": "2018-07-24T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:04:00",
+          "End": "12:00:00"
+        },
+        {
+          "IsCurrent": false,
+          "Begin": "12:39:00",
+          "End": "17:17:00"
+        }
+      ],
+      "Date": "2018-07-25T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:12:00",
+          "End": "16:32:00"
+        }
+      ],
+      "Date": "2018-07-26T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": false,
+          "Begin": "08:25:00",
+          "End": "16:23:00"
+        }
+      ],
+      "Date": "2018-07-27T00:00:00"
+    }
+  ],
+  "WorkTimeRegular": "08:00:00",
+  "BreakTimeRegular": "00:30:00",
+  "WeekWorkTimeRegular": "1.16:00:00"
+}

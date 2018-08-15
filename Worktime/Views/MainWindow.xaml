@@ -103,65 +103,40 @@
                 Command="{Binding EditCommand}"
                 CommandParameter="{Binding ElementName=_metroWindow}"
                 Content="Edit" />
-        <Label x:Name="_labelName"
-               Grid.Row="1"
-               Grid.Column="0"
-               Content="Name"
-               FontWeight="Bold" />
         <Label Grid.Row="1"
-               Grid.Column="1"
+               Grid.Column="0"
                Content="Clock in"
                FontWeight="Bold" />
         <Label Grid.Row="1"
-               Grid.Column="2"
+               Grid.Column="1"
                Content="Cut"
                FontWeight="Bold" />
-        <Viewbox Grid.Row="2"
-                 Grid.Column="0"
-                 Grid.ColumnSpan="3"
-                 Height="20"
-                 Visibility="{Binding ElementName=_labelError, Path=HasContent, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Label x:Name="_labelError"
-                   Content="{Binding Error}"
-                   Foreground="Red" />
-        </Viewbox>
+        <Label x:Name="_labelName"
+               Grid.Row="1"
+               Grid.Column="2"
+               Content="Overtime"
+               FontWeight="Bold" />
         <Grid Grid.Row="2"
               Grid.Column="0"
               Grid.ColumnSpan="3"
-              Height="16"
-              Visibility="{Binding ElementName=_labelError, Path=HasContent, Converter={StaticResource NegatedBooleanToVisibilityConverter}}">
+              Height="16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0"
-                   Grid.Column="0"
-                   Padding="5,0,5,0"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Center"
-                   Content="{Binding Employee.Name}">
-                <Label.Style>
-                    <Style TargetType="{x:Type Label}">
-                        <Setter Property="Content" Value="{Binding Employee.Name}" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Employee.Name}"
-                                         Value="UNKNOWN">
-                                <Setter Property="Foreground" Value="Red" />
-                                <Setter Property="ToolTip" Value="Problem signing in!" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Label.Style>
-            </Label>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Padding="5,0,5,0"
+                       Text="{Binding Employee.Begin, Converter={StaticResource TimeSpanConverter}}" />
             <TextBlock Grid.Row="0"
                        Grid.Column="1"
                        Padding="5,0,5,0"
-                       Text="{Binding Employee.Begin, StringFormat='{}{0:hh\\:mm\\:ss}'}" />
+                       Text="{Binding Employee.EstimatedCut, Converter={StaticResource TimeSpanConverter}}" />
             <TextBlock Grid.Row="0"
                        Grid.Column="2"
                        Padding="5,0,5,0"
-                       Text="{Binding Employee.EstimatedCut, StringFormat='{}{0:hh\\:mm\\:ss}'}" />
+                       Text="{Binding Employee.Overtime, Converter={StaticResource TimeSpanConverter}}" />
         </Grid>
         <Label Grid.Row="4"
                Grid.Column="0"

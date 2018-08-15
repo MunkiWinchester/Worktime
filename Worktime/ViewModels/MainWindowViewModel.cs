@@ -24,13 +24,11 @@ namespace Worktime.ViewModels
         /// <param name="running">true if the timer is running, otherwise false</param>
         public delegate void RunningStateEvent(bool running);
 
-        private readonly EmployeeManager _employeeManager;
         private readonly Timer _timer30Min;
         private readonly Timer _timer30Sec;
         private double _breakPercentageValue;
         private double _dayPercentageValue;
         private Employee _employee;
-        private string _error;
         private bool _startEnabled = true;
         private bool _stopEnabled;
         private double _weekPercentageValue;
@@ -40,7 +38,6 @@ namespace Worktime.ViewModels
         /// </summary>
         public MainWindowViewModel()
         {
-            _employeeManager = new EmployeeManager();
             _employee = new Employee();
 
             _timer30Sec = new Timer(TimeSpan.FromSeconds(30).TotalMilliseconds);
@@ -147,33 +144,26 @@ namespace Worktime.ViewModels
         /// </summary>
         public ICommand StopCommand => new DelegateCommand(AddStamp);
 
-        /// <summary>
-        /// String with a error message
-        /// </summary>
-        public string Error
-        {
-            get => _error;
-            set
-            {
-                _error = value;
-                OnPropertyChanged();
-            }
-        }
-
         private void EditTimeFrames(MainWindow mainWindow)
         {
-            var editView = new EditWindow(mainWindow, Employee);
+            var employeeValues = EmployeeManager.GetEmployeeValuesFromJson()?.OrderByDescending(ev => ev.IsoWeek).ToList();
+            var editView = new EditWindow(mainWindow, employeeValues);
             var result = editView.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                _employeeManager.SaveEmployeeValues(Employee);
+                foreach (var employee in employeeValues.Where(ev => ev.HasChanges))
+                {
+                    EmployeeManager.SaveEmployeeValues(employee);
+                    if (employee.IsoWeek.Equals(Employee.IsoWeek))
+                        Employee = employee;
+                }
                 RefreshView();
             }
         }
 
         private void AddStamp()
         {
-            _employeeManager.AddStamp(_employee);
+            EmployeeManager.AddStamp(Employee);
             StartEnabled = StopEnabled;
             StopEnabled = !StopEnabled;
         }
@@ -223,10 +213,7 @@ namespace Worktime.ViewModels
         private void RefreshValues()
         {
             RunningStateChanged?.Invoke(false);
-            var employee = _employeeManager.LoadEmployeeValues();
-            Error = null; // null, so Label.HasContent is false
-
-            if (string.IsNullOrWhiteSpace(employee?.Name)) return;
+            var employee = EmployeeManager.LoadEmployeeValues();
 
             Employee = employee;
 
@@ -245,7 +232,7 @@ namespace Worktime.ViewModels
         /// </summary>
         private void RefreshView()
         {
-            if (string.IsNullOrWhiteSpace(Error) && Employee != null)
+            if (Employee != null)
             {
                 var employee = Employee;
 

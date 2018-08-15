@@ -154,15 +154,15 @@ namespace Worktime.ViewModels
         /// </summary>
         private void SwitchAppStyle()
         {
-			if (!_initial)
-			{
-				if (SelectedAccent == UiTheme.WindowAccentName)
-					UiTheme.CreateWindowsAccentStyle(true, ThemeManager.GetAppTheme(_selectedTheme));
-				else
-					ThemeManager.ChangeAppStyle(Application.Current,
-						ThemeManager.GetAccent(_selectedAccent),
-						ThemeManager.GetAppTheme(_selectedTheme));
-			}
+            if (!_initial)
+            {
+                if (SelectedAccent == UiTheme.WindowAccentName)
+                    UiTheme.CreateWindowsAccentStyle(true, ThemeManager.GetAppTheme(_selectedTheme));
+                else
+                    ThemeManager.ChangeAppStyle(Application.Current,
+                        ThemeManager.GetAccent(_selectedAccent),
+                        ThemeManager.GetAppTheme(_selectedTheme));
+            }
         }
 
         /// <summary>

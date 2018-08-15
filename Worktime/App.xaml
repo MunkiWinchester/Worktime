@@ -15,12 +15,15 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="{x:Type Label}">
-                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Padding" Value="5,0,5,0" />
             </Style>
             <Style TargetType="{x:Type TextBox}">
                 <Setter Property="Margin" Value="5" />
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="HorizontalAlignment" Value="Center" />
             </Style>
             <Style TargetType="{x:Type Button}">
                 <Setter Property="Margin" Value="5" />

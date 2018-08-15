@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using Worktime.Extension;
 
 namespace Worktime.Business
 {
@@ -23,7 +24,7 @@ namespace Worktime.Business
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is TimeSpan ts)
-                return $@"{(int) ts.TotalHours:00}:{ts.Minutes:00}";
+                return ts.ToFormatedString();
 
             return new TimeSpan().ToString(@"hh\:mm");
         }

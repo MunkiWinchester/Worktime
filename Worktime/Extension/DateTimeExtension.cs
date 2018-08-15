@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Globalization;
+using Worktime.DataObjetcs;
 
-namespace Worktime.Business
+namespace Worktime.Extension
 {
     public static class DateTimeExtension
     {
         // This presumes that weeks start with Monday.
         // Week 1 is the 1st week of the year with a Thursday in it.
-        public static int Iso8601WeekOfYear(this DateTime time)
+        public static IsoWeek Iso8601WeekOfYear(this DateTime time)
         {
             // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll 
             // be the same week# as whatever Thursday, Friday or Saturday are,
@@ -17,8 +18,8 @@ namespace Worktime.Business
                 time = time.AddDays(3);
 
             // Return the week of our adjusted day
-            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek,
-                DayOfWeek.Monday);
+            return new IsoWeek(CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek,
+                DayOfWeek.Monday), time.Year);
         }
 
         public static DateTime StartOfWeek(this DateTime dt, DayOfWeek startOfWeek)

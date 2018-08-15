@@ -1,6 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Worktime.Business;
+using Worktime.Extension;
 using WpfUtility.Services;
 
 namespace Worktime.DataObjetcs
@@ -11,10 +11,10 @@ namespace Worktime.DataObjetcs
         private TimeSpan? _end;
         private bool _isCurrent;
 
-		public TimeFrame()
-		{
-			Begin = DateTime.Now.ToDatelessTimeSpan();
-		}
+        public TimeFrame()
+        {
+            Begin = DateTime.Now.ToDatelessTimeSpan();
+        }
 
         public bool IsCurrent
         {
