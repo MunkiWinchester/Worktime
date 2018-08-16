@@ -34,10 +34,30 @@
         {
           "IsCurrent": true,
           "Begin": "13:31:00",
-          "End": null
+          "End": "16:47:00"
         }
       ],
       "Date": "2018-08-15T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": true,
+          "Begin": "08:08:00",
+          "End": "16:45:00"
+        }
+      ],
+      "Date": "2018-08-16T00:00:00"
+    },
+    {
+      "TimeFrames": [
+        {
+          "IsCurrent": true,
+          "Begin": "08:18:00",
+          "End": null
+        }
+      ],
+      "Date": "2018-08-17T00:00:00"
     }
   ],
   "WorkTimeRegular": "08:00:00",

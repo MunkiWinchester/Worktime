@@ -9,21 +9,55 @@ namespace Worktime.DataObjetcs
 {
     public class Times : ObservableObject
     {
-        private ObservableCollection<TimeFrame> _timeFrames = new ObservableCollection<TimeFrame>();
+        public event EventHandler<string> OnChange;
+        private ObservableCollection<TimeFrame> _timeFrames;
         private DateTime _date;
+        private readonly bool _isInitial = true;
+
+        public Times()
+        {
+            TimeFrames = new ObservableCollection<TimeFrame>();
+            _isInitial = false;
+        }
+
+        [JsonConstructor]
+        public Times(DateTime date, ObservableCollection<TimeFrame> timeFrames)
+        {
+            Date = date;
+            TimeFrames = timeFrames;
+            _isInitial = false;
+        }
 
         public ObservableCollection<TimeFrame> TimeFrames
         {
             get => _timeFrames;
             set
             {
-                SetField(ref _timeFrames, value);
-                OnPropertyChanged(nameof(Span));
-                OnPropertyChanged(nameof(SpanCorrected));
-                OnPropertyChanged(nameof(SpanCorrectedExplanation));
-                OnPropertyChanged(nameof(BreakTimeReal));
-                OnPropertyChanged(nameof(BreakCalculated));
-                OnPropertyChanged(nameof(BreakDifference));
+                if (SetField(ref _timeFrames, value))
+                {
+                    if (!_isInitial)
+                        OnChange?.Invoke(this, nameof(TimeFrames));
+                    OnPropertyChanged(nameof(Span));
+                    OnPropertyChanged(nameof(SpanCorrected));
+                    OnPropertyChanged(nameof(SpanCorrectedExplanation));
+                    OnPropertyChanged(nameof(BreakTimeReal));
+                    OnPropertyChanged(nameof(BreakCalculated));
+                    OnPropertyChanged(nameof(BreakDifference));
+
+                    foreach (var timeFrame in _timeFrames)
+                    {
+                        timeFrame.OnChange += ValueChanged;
+                    }
+                }
+            }
+        }
+
+        private void ValueChanged(object sender, string e)
+        {
+            if (!_isInitial)
+            {
+                OnChange?.Invoke(this, nameof(TimeFrame));
+                Console.WriteLine($"{DateTime.Now:t}: Value Changed: {this} - {sender} - {e}");
             }
         }
 
@@ -32,11 +66,12 @@ namespace Worktime.DataObjetcs
             get => _date;
             set
             {
-                _date = value;
-                OnPropertyChanged();
+                if (SetField(ref _date, value) && !_isInitial)
+                    OnChange?.Invoke(this, nameof(Date));
             }
         }
 
+        #region [JsonIgnore]
         [JsonIgnore]
         public TimeSpan Span =>
             TimeSpan.FromSeconds(TimeFrames.Where(t => t.Span != null).Sum(t => ((TimeSpan) t.Span).TotalSeconds));
@@ -115,6 +150,7 @@ namespace Worktime.DataObjetcs
 
         [JsonIgnore]
         public ICommand RemoveTimeFrameCommand => new RelayCommand<TimeFrame>(RemoveTimeFrame);
+        #endregion [JsonIgnore]
 
         private void RemoveTimeFrame(TimeFrame timeFrame)
         {
@@ -146,7 +182,7 @@ namespace Worktime.DataObjetcs
 
         public override string ToString()
         {
-            return $"{Date:dd.MM.} --- {Span:hh:mm}h";
+            return $"{Date:dd\\.MM\\.} --- {Span:hh\\:mm}h";
         }
     }
 }

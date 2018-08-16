@@ -10,19 +10,44 @@ namespace Worktime.DataObjetcs
 {
     public class Employee : ObservableObject
     {
-        private TimeSpan _breakTimeRegular = new TimeSpan(0, 30, 0);
-        private IsoWeek _isoWeek = new IsoWeek();
-        private ObservableCollection<Times> _times = new ObservableCollection<Times>();
-        private TimeSpan _weekWorkTimeRegular = new TimeSpan(40, 0, 0);
-        private TimeSpan _workTimeRegular = new TimeSpan(8, 0, 0);
+        private TimeSpan _breakTimeRegular;
+        private IsoWeek _isoWeek;
+        private ObservableCollection<Times> _times;
+        private TimeSpan _weekWorkTimeRegular;
+        private TimeSpan _workTimeRegular;
+        private bool _isInitial = true;
+        private TimeSpan _overTime;
+
+        public Employee()
+        {
+            BreakTimeRegular = new TimeSpan(0, 30, 0);
+            IsoWeek = new IsoWeek();
+            Times = new ObservableCollection<Times>();
+            WeekWorkTimeRegular = new TimeSpan(40, 0, 0);
+            WorkTimeRegular = new TimeSpan(8, 0, 0);
+            Overtime = new TimeSpan(0, 0, 0);
+            _isInitial = false;
+        }
+
+        [JsonConstructor]
+        public Employee(TimeSpan breakTimeRegular, IsoWeek isoWeek, ObservableCollection<Times> times, TimeSpan weekWorkTimeRegular, TimeSpan workTimeRegular, TimeSpan overTime)
+        {
+            BreakTimeRegular = breakTimeRegular;
+            IsoWeek = isoWeek;
+            Times = times;
+            WeekWorkTimeRegular = weekWorkTimeRegular;
+            WorkTimeRegular = workTimeRegular;
+            Overtime = overTime;
+            _isInitial = false;
+        }
 
         public IsoWeek IsoWeek
         {
             get => _isoWeek;
             set
             {
-                _isoWeek = value;
-                OnPropertyChanged();
+                if (SetField(ref _isoWeek, value))
+                    ChangeHasChanges(this, nameof(IsoWeek));
             }
         }
 
@@ -31,14 +56,27 @@ namespace Worktime.DataObjetcs
             get => _times;
             set
             {
-                SetField(ref _times, value);
-                OnPropertyChanged(nameof(Begin));
-                OnPropertyChanged(nameof(BreakTimeReal));
-                OnPropertyChanged(nameof(EstimatedCut));
-                OnPropertyChanged(nameof(Overtime));
-                OnPropertyChanged(nameof(WeekWorkTimeReal));
-                OnPropertyChanged(nameof(WorkTimeReal));
+                if (SetField(ref _times, value))
+                {
+                    ChangeHasChanges(this, nameof(Times));
+                    OnPropertyChanged(nameof(Begin));
+                    OnPropertyChanged(nameof(BreakTimeReal));
+                    OnPropertyChanged(nameof(EstimatedCut));
+                    OnPropertyChanged(nameof(Overtime));
+                    OnPropertyChanged(nameof(WeekWorkTimeReal));
+                    OnPropertyChanged(nameof(WorkTimeReal));
+
+                    foreach (var time in _times)
+                    {
+                        time.OnChange +=ValueChanged;
+                    }
+                }
             }
+        }
+
+        private void ValueChanged(object sender, string e)
+        {
+            ChangeHasChanges(sender, e);
         }
 
         public TimeSpan WorkTimeRegular
@@ -46,9 +84,11 @@ namespace Worktime.DataObjetcs
             get => _workTimeRegular;
             set
             {
-                _workTimeRegular = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Overtime));
+                if (SetField(ref _workTimeRegular, value))
+                {
+                    ChangeHasChanges(this, nameof(WorkTimeRegular));
+                    OnPropertyChanged(nameof(Overtime));
+                }
             }
         }
 
@@ -57,9 +97,11 @@ namespace Worktime.DataObjetcs
             get => _breakTimeRegular;
             set
             {
-                _breakTimeRegular = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Overtime));
+                if (SetField(ref _breakTimeRegular, value))
+                {
+                    ChangeHasChanges(this, nameof(BreakTimeRegular));
+                    OnPropertyChanged(nameof(Overtime));
+                }
             }
         }
 
@@ -68,13 +110,16 @@ namespace Worktime.DataObjetcs
             get => _weekWorkTimeRegular;
             set
             {
-                _weekWorkTimeRegular = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Overtime));
+                if (SetField(ref _weekWorkTimeRegular, value))
+                {
+                    ChangeHasChanges(this, nameof(WeekWorkTimeRegular));
+                    OnPropertyChanged(nameof(Overtime));
+                }
             }
         }
 
         #region [JsonIgnore]
+
         [JsonIgnore]
         public bool HasChanges { get; set; }
 
@@ -92,7 +137,7 @@ namespace Worktime.DataObjetcs
         }
 
         [JsonIgnore]
-        public TimeSpan Overtime => EmployeeManager.CalculateTotalOvertime(this);
+        public TimeSpan Overtime { get => _overTime; set => SetField(ref _overTime, value); }
 
         [JsonIgnore]
         public TimeSpan EstimatedCut =>
@@ -130,12 +175,26 @@ namespace Worktime.DataObjetcs
 
         [JsonIgnore]
         public TimeSpan WeekWorkTimeReal =>
-            TimeSpan.FromSeconds(Times.Sum(t => t.SpanCorrected.TotalSeconds)); // TODO: Pausenzeiten beachten!
+            TimeSpan.FromSeconds(Times.Sum(t => t.SpanCorrected.TotalSeconds));
         #endregion [JsonIgnore]
 
         public override string ToString()
         {
             return $"{IsoWeek} - {WeekWorkTimeReal.ToFormatedString()} of {WeekWorkTimeRegular.ToFormatedString()}";
+        }
+
+        private void ChangeHasChanges(object sender, string e)
+        {
+            if (!_isInitial)
+            {
+                HasChanges = true;
+                Console.WriteLine($"{DateTime.Now:t}: Value Changed: {this} - {sender} - {e}");
+            }
+        }
+
+        public void TrackChanges(bool activateTracking)
+        {
+            _isInitial = !activateTracking;
         }
     }
 }

@@ -151,11 +151,10 @@ namespace Worktime.ViewModels
             var result = editView.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                foreach (var employee in employeeValues.Where(ev => ev.HasChanges))
+                var (currentHasChanged, currentEmployee)= EmployeeManager.SaveEmployeeValues(employeeValues, Employee.IsoWeek);
+                if (currentHasChanged)
                 {
-                    EmployeeManager.SaveEmployeeValues(employee);
-                    if (employee.IsoWeek.Equals(Employee.IsoWeek))
-                        Employee = employee;
+                    Employee = currentEmployee;
                 }
                 RefreshView();
             }

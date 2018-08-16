@@ -7,13 +7,16 @@ namespace Worktime.DataObjetcs
 {
     public class TimeFrame : ObservableObject
     {
+        public event EventHandler<string> OnChange;
         private TimeSpan _begin;
         private TimeSpan? _end;
         private bool _isCurrent;
+        private readonly bool _isInitial = true;
 
         public TimeFrame()
         {
             Begin = DateTime.Now.ToDatelessTimeSpan();
+            _isInitial = false;
         }
 
         public bool IsCurrent
@@ -21,8 +24,8 @@ namespace Worktime.DataObjetcs
             get => _isCurrent;
             set
             {
-                _isCurrent = value;
-                OnPropertyChanged();
+                if (SetField(ref _isCurrent, value) && !_isInitial)
+                    OnChange?.Invoke(this, nameof(IsCurrent));
             }
         }
 
@@ -31,9 +34,12 @@ namespace Worktime.DataObjetcs
             get => _begin;
             set
             {
-                _begin = new TimeSpan(value.Hours, value.Minutes, value.Seconds);
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Span));
+                if (SetField(ref _begin, new TimeSpan(value.Hours, value.Minutes, value.Seconds)))
+                {
+                    if(!_isInitial)
+                        OnChange?.Invoke(this, nameof(Begin));
+                    OnPropertyChanged(nameof(Span));
+                }
             }
         }
 
@@ -42,12 +48,17 @@ namespace Worktime.DataObjetcs
             get => _end;
             set
             {
+                var end = new TimeSpan?();
                 if (value is TimeSpan notNullValue)
-                    _end = new TimeSpan(notNullValue.Hours, notNullValue.Minutes, notNullValue.Seconds);
+                    end = new TimeSpan(notNullValue.Hours, notNullValue.Minutes, notNullValue.Seconds);
                 else
-                    _end = null;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Span));
+                    end = null;
+                if (SetField(ref _end, end))
+                {
+                    if (!_isInitial)
+                        OnChange?.Invoke(this, nameof(End));
+                    OnPropertyChanged(nameof(Span));
+                }
             }
         }
 
@@ -66,7 +77,7 @@ namespace Worktime.DataObjetcs
 
         public override string ToString()
         {
-            return $"{Begin:dd.MM. HH:mm} --- {End:dd.MM. HH:mm}";
+            return $"{Begin:hh\\:mm} --- {End:hh\\:mm}";
         }
     }
 }

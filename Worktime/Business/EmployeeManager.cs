@@ -81,8 +81,8 @@ namespace Worktime.Business
         /// <returns></returns>
         public static Employee LoadEmployeeValues()
         {
-
             var employee = GetCurrentEmployeeValueFromJson();
+            employee.TrackChanges(false);
             employee.Times = new ObservableCollection<Times>(employee.Times.OrderBy(t => t.Date));
             foreach (var employeeTime in employee.Times)
                 employeeTime.TimeFrames =
@@ -104,8 +104,10 @@ namespace Worktime.Business
             employee.BreakTimeRegular = new TimeSpan(0,
                 Convert.ToInt32(Math.Floor(employee.WorkTimeRegular.TotalHours / 3) * 15), 0);
 
-            SaveEmployeeValues(employee);
+            employee.Overtime = CalculateTotalOvertime(employee);
 
+            SaveEmployeeValues(employee);
+            employee.TrackChanges(true);
             return employee;
         }
 
@@ -139,6 +141,23 @@ namespace Worktime.Business
                 {
                     sw.Write(json);
                 }
+        }
+
+        public static (bool currentHasChanged, Employee currentEmployee) SaveEmployeeValues(List<Employee> employeeValues, IsoWeek currentIsoWeek)
+        {
+            var changedEvs = employeeValues.Where(ev => ev.HasChanges).ToList();
+            var currentHasChanged = false;
+            var currentEmployee = new Employee();
+            Parallel.ForEach(changedEvs, employee =>
+            {
+                SaveEmployeeValues(employee);
+                if (employee.IsoWeek.Equals(currentIsoWeek))
+                {
+                    currentEmployee = employee;
+                    currentHasChanged = true;
+                }
+            });
+            return (currentHasChanged, currentEmployee);
         }
 
         public static int CalculateHolidays()
