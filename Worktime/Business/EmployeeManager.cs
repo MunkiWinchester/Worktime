@@ -20,17 +20,16 @@ namespace Worktime.Business
         {
             get
             {
-
-                var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 DirectoryInfo dirInfo = null;
-                if (location != null)
-                {
 #if DEBUG
-                    dirInfo = new DirectoryInfo(Path.Combine(location, "Data", "Test"));
+                dirInfo = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Data", "Test"));
 #else
-                    dirInfo = new DirectoryInfo(Path.Combine(location, "Data"));
+                var location = Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+                location = Path.Combine(location, $".{Assembly.GetExecutingAssembly().GetName().Name}", DateTime.Now.Year.ToString());
+                if (!Directory.Exists(location))
+                    Directory.CreateDirectory(location);
+                dirInfo = new DirectoryInfo(location);
 #endif
-                }
                 return dirInfo;
             }
         }
