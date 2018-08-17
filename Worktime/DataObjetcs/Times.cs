@@ -37,12 +37,7 @@ namespace Worktime.DataObjetcs
                 {
                     if (!_isInitial)
                         OnChange?.Invoke(this, nameof(TimeFrames));
-                    OnPropertyChanged(nameof(Span));
-                    OnPropertyChanged(nameof(SpanCorrected));
-                    OnPropertyChanged(nameof(SpanCorrectedExplanation));
-                    OnPropertyChanged(nameof(BreakTimeReal));
-                    OnPropertyChanged(nameof(BreakCalculated));
-                    OnPropertyChanged(nameof(BreakDifference));
+                    TriggerPropertiesOnChanged();
 
                     foreach (var timeFrame in _timeFrames)
                     {
@@ -52,12 +47,23 @@ namespace Worktime.DataObjetcs
             }
         }
 
+        private void TriggerPropertiesOnChanged()
+        {
+            OnPropertyChanged(nameof(Span));
+            OnPropertyChanged(nameof(SpanCorrected));
+            OnPropertyChanged(nameof(SpanCorrectedExplanation));
+            OnPropertyChanged(nameof(BreakTimeReal));
+            OnPropertyChanged(nameof(BreakCalculated));
+            OnPropertyChanged(nameof(BreakDifference));
+        }
+
         private void ValueChanged(object sender, string e)
         {
             if (!_isInitial)
             {
                 OnChange?.Invoke(this, nameof(TimeFrame));
-                Console.WriteLine($"{DateTime.Now:t}: Value Changed: {this} - {sender} - {e}");
+                TriggerPropertiesOnChanged();
+                Console.WriteLine($"{DateTime.Now:t}: Value Changed: {GetType().Name} - {nameof(sender)} - {e}");
             }
         }
 
