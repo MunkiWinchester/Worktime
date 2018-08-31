@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using MahApps.Metro;
+using Worktime.Views;
 
 namespace Worktime
 {
@@ -9,7 +10,7 @@ namespace Worktime
     /// </summary>
     public partial class App
     {
-        protected override void OnStartup(StartupEventArgs e)
+        private void Application_Startup(object sender, StartupEventArgs e)
         {
             // add custom accent and theme resource dictionaries to the ThemeManager
             ThemeManager.AddAccent("Spotify",
@@ -21,7 +22,13 @@ namespace Worktime
             ThemeManager.AddAppTheme("BaseGray",
                 new Uri("pack://application:,,,/Worktime;component/Resources/Custom/Theme/BaseGray.xaml"));
 
-            base.OnStartup(e);
+            // Core.Initialize();
+            var splash = new Updater.SplashScreenWindow();
+            splash.Show();
+
+            Updater.GitHub.CheckForUpdate("MunkiWinchester", "Worktime", new Version(0, 0, 0, 0));
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
         }
     }
 }

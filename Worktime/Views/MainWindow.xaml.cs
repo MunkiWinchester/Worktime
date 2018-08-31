@@ -40,8 +40,8 @@ namespace Worktime.Views
         {
             InitializeComponent();
 
-			UiTheme.InitializeTheme();
-			Top = Settings.Default.Top;
+            UiTheme.InitializeTheme();
+            Top = Settings.Default.Top;
             Left = Settings.Default.Left;
 
             DataContext = _viewModel;
