@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Shell;
 using MahApps.Metro;
-using Worktime.Business;
 using Worktime.Properties;
 using Worktime.ViewModels;
 using Application = System.Windows.Application;
@@ -20,12 +19,12 @@ namespace Worktime.Views
         /// <summary>
         /// Contains the notify icon
         /// </summary>
-        private readonly NotifyIcon _notifyIcon;
+        private NotifyIcon _notifyIcon;
 
         /// <summary>
         /// Contains the view model
         /// </summary>
-        private readonly MainWindowViewModel _viewModel = new MainWindowViewModel();
+        private MainWindowViewModel _viewModel = new MainWindowViewModel();
 
         /// <summary>
         /// true if the timer reached the end, otherwise false
@@ -39,8 +38,10 @@ namespace Worktime.Views
         public MainWindow()
         {
             InitializeComponent();
+        }
 
-            UiTheme.InitializeTheme();
+        internal void LoadConfigSettings()
+        {
             Top = Settings.Default.Top;
             Left = Settings.Default.Left;
 
@@ -56,6 +57,29 @@ namespace Worktime.Views
                     Text = @"Worktime!"
                 };
             _notifyIcon.Click += NotifyIconOnClick;
+
+            Settings.Default.SelectedAccent = string.IsNullOrWhiteSpace(Settings.Default.SelectedAccent)
+                ? "Crimson"
+                : Settings.Default.SelectedAccent;
+            Settings.Default.SelectedTheme = string.IsNullOrWhiteSpace(Settings.Default.SelectedTheme)
+                ? "BaseDark"
+                : Settings.Default.SelectedTheme;
+            Settings.Default.Save();
+
+            try
+            {
+                ThemeManager.ChangeAppStyle(Application.Current,
+                    ThemeManager.GetAccent(Settings.Default.SelectedAccent),
+                    ThemeManager.GetAppTheme(Settings.Default.SelectedTheme));
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent("Crimson"),
+                    ThemeManager.GetAppTheme("BaseDark"));
+            }
+
+            _viewModel.InitControl();
         }
 
         /// <summary>
@@ -87,28 +111,28 @@ namespace Worktime.Views
         /// <param name="e"></param>
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            Settings.Default.SelectedAccent = string.IsNullOrWhiteSpace(Settings.Default.SelectedAccent)
-                ? "Crimson"
-                : Settings.Default.SelectedAccent;
-            Settings.Default.SelectedTheme = string.IsNullOrWhiteSpace(Settings.Default.SelectedTheme)
-                ? "BaseDark"
-                : Settings.Default.SelectedTheme;
-            Settings.Default.Save();
+            //Settings.Default.SelectedAccent = string.IsNullOrWhiteSpace(Settings.Default.SelectedAccent)
+            //    ? "Crimson"
+            //    : Settings.Default.SelectedAccent;
+            //Settings.Default.SelectedTheme = string.IsNullOrWhiteSpace(Settings.Default.SelectedTheme)
+            //    ? "BaseDark"
+            //    : Settings.Default.SelectedTheme;
+            //Settings.Default.Save();
 
-            try
-            {
-                ThemeManager.ChangeAppStyle(Application.Current,
-                    ThemeManager.GetAccent(Settings.Default.SelectedAccent),
-                    ThemeManager.GetAppTheme(Settings.Default.SelectedTheme));
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-                ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent("Crimson"),
-                    ThemeManager.GetAppTheme("BaseDark"));
-            }
+            //try
+            //{
+            //    ThemeManager.ChangeAppStyle(Application.Current,
+            //        ThemeManager.GetAccent(Settings.Default.SelectedAccent),
+            //        ThemeManager.GetAppTheme(Settings.Default.SelectedTheme));
+            //}
+            //catch (Exception exception)
+            //{
+            //    Console.WriteLine(exception);
+            //    ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent("Crimson"),
+            //        ThemeManager.GetAppTheme("BaseDark"));
+            //}
 
-            _viewModel.InitControl();
+            //_viewModel.InitControl();
         }
 
         /// <summary>

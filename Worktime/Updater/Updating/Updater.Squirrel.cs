@@ -2,11 +2,9 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using Newtonsoft.Json;
 using Squirrel;
 
 namespace Worktime.Updater.Updating
@@ -42,25 +40,12 @@ namespace Worktime.Updater.Updating
             }
         }
 
-        private static async Task<string> GetReleaseUrl(string release)
+        private static string GetReleaseUrl(string release)
         {
-            if(_releaseUrls != null)
+            if (_releaseUrls != null)
                 return _releaseUrls.GetReleaseUrl(release);
-            var file = Path.Combine(AppDataPath, "releases.json");
-            string fileContent;
-            try
-            {
-                Console.WriteLine("Downloading releases file");
-                using(var wc = new WebClient())
-                    await wc.DownloadFileTaskAsync("https://hsdecktracker.net/releases.json", file);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-            using(var sr = new StreamReader(file))
-                fileContent = sr.ReadToEnd();
-            _releaseUrls = JsonConvert.DeserializeObject<ReleaseUrls>(fileContent);
+            else
+                _releaseUrls = new ReleaseUrls();
             var url = _releaseUrls.GetReleaseUrl(release);
             Console.WriteLine($"using '{release}' release: {url}");
             return url;
@@ -68,7 +53,8 @@ namespace Worktime.Updater.Updating
 
         private static async Task<UpdateManager> GetUpdateManager()
         {
-            return await UpdateManager.GitHubUpdateManager(await GetReleaseUrl("live"));
+            // https://github.com/Squirrel/Squirrel.Windows/blob/master/docs/using/github.md
+            return await UpdateManager.GitHubUpdateManager(GetReleaseUrl("live"));
         }
 
         public static async Task StartupUpdateCheck(SplashScreenWindow splashScreenWindow)
@@ -98,18 +84,10 @@ namespace Worktime.Updater.Updating
                     updated = await SquirrelUpdate(mgr, splashScreenWindow);
                 }
 
-                if(updated)
+                if (updated)
                 {
-                    if(splashScreenWindow.SkipUpdate)
-                    {
-                        Console.WriteLine("Update complete, showing update bar");
-                        StatusBar.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Update complete, restarting");
-                        UpdateManager.RestartApp();
-                    }
+                    Console.WriteLine("Update complete, restarting");
+                    UpdateManager.RestartApp();
                 }
             }
             catch(Exception ex)
@@ -171,8 +149,6 @@ namespace Worktime.Updater.Updating
                 if(IsRevisionIncrement(current?.Version, latest?.Version))
                 {
                     Console.WriteLine($"{latest}) is revision increment. Updating in background.");
-                    if(splashScreenWindow != null)
-                        splashScreenWindow.SkipUpdate = true;
                 }
                 Console.WriteLine($"{(ignoreDelta ? "" : "delta ")}releases, latest={latest?.Version}");
                 if(splashScreenWindow != null)

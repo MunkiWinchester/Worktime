@@ -1,13 +1,10 @@
-using Newtonsoft.Json;
-
 namespace Worktime.Updater.Updating
 {
     public class ReleaseUrls
     {
         private const string FieldLive = "live";
 
-        [JsonProperty(FieldLive)]
-        public string Live { get; set; }
+        public string Live => "https://github.com/munkiwinchester/worktime";
 
         public string GetReleaseUrl(string release) => Live;
     }

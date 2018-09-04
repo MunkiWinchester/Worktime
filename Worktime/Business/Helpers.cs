@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace Worktime.Business
 {
@@ -19,5 +20,9 @@ namespace Worktime.Business
             result = result * 100;
             return result;
         }
+
+        public static Version GetCurrentVersion() => Assembly.GetExecutingAssembly().GetName().Version;
+        public static string ToVersionString(this Version version, bool includeRef = false) =>
+            $"{version?.Major}.{version?.Minor}.{version?.Build}{(includeRef ? "." + version?.Revision : "")}";
     }
 }

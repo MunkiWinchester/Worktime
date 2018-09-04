@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using MahApps.Metro;
-using Worktime.Views;
 
 namespace Worktime
 {
@@ -22,13 +21,13 @@ namespace Worktime
             ThemeManager.AddAppTheme("BaseGray",
                 new Uri("pack://application:,,,/Worktime;component/Resources/Custom/Theme/BaseGray.xaml"));
 
-            // Core.Initialize();
-            var splash = new Updater.SplashScreenWindow();
-            splash.Show();
-
-            Updater.GitHub.CheckForUpdate("MunkiWinchester", "Worktime", new Version(0, 0, 0, 0));
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            Core.Initialize();
+            //var splash = new Updater.SplashScreenWindow();
+            //splash.Show();
+            //
+            //Updater.GitHub.CheckForUpdate("MunkiWinchester", "Worktime", new Version(0, 0, 0, 0)).Wait();
+            //MainWindow mainWindow = new MainWindow();
+            //mainWindow.Show();
         }
     }
 }

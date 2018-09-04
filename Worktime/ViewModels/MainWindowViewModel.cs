@@ -4,6 +4,7 @@ using System.Timers;
 using System.Windows.Input;
 using Worktime.Business;
 using Worktime.DataObjetcs;
+using Worktime.Extension;
 using Worktime.Views;
 using WpfUtility.Services;
 
@@ -242,10 +243,10 @@ namespace Worktime.ViewModels
                     Helpers.CalculatePercentage(employee.WeekWorkTimeReal, employee.WeekWorkTimeRegular);
 
                 RunningStateChanged?.Invoke(true);
-                ProgressChanged?.Invoke(DayPercentageValue,
-                    $@"Worktime!
-Work time: {(int) employee.WorkTimeReal.TotalHours:00}:{employee.WorkTimeReal.Minutes:00} ({DayPercentageValue:0.##}%)
-Est. cut: {(int) employee.EstimatedCut.TotalHours:00}:{employee.EstimatedCut.Minutes:00}");
+                ProgressChanged?.Invoke(DayPercentageValue, 
+$@"Worked: {employee.WorkTimeReal.ToFormatedString()} ({DayPercentageValue:0.##}%)
+Est. cut: {employee.EstimatedCut.ToFormatedString()}
+Overtime: {employee.Overtime.ToFormatedString()}");
 
                 Employee = employee;
             }
