@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Worktime</id>
+    <version>1.0.1</version>
+    <title>Worktime</title>
+    <authors>Eike Stremlau</authors>
+    <owners>Eike Stremlau</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://raw.githubusercontent.com/MunkiWinchester/Worktime/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/MunkiWinchester/Worktime</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/MunkiWinchester/Worktime/master/Worktime/Resources/Images/Utilities-clock.png</iconUrl>
+    <description>Application to track your working time.</description>
+    <copyright>Copyright 2017</copyright>
+    <tags>Worktime</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\Worktime.application" target="lib\net461\Worktime.application" />
+    <file src="bin\Release\Worktime.exe" target="lib\net461\Worktime.exe" />
+    <file src="bin\Release\Worktime.exe.config" target="lib\net461\Worktime.exe.config" />
+    <file src="bin\Release\Worktime.exe.manifest" target="lib\net461\Worktime.exe.manifest" />
+  </files>
+</package>
