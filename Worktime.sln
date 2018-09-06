@@ -5,6 +5,13 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worktime", "Worktime\Worktime.csproj", "{C2605EEB-D8B7-4A0B-AC1A-C2D216A5828A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{428A74DD-3485-412E-B751-621F95FBDC31}"
+	ProjectSection(SolutionItems) = preProject
+		Worktime\nuget.exe = Worktime\nuget.exe
+		Worktime\pack.ps1 = Worktime\pack.ps1
+		Worktime\Worktime.nuspec = Worktime\Worktime.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
