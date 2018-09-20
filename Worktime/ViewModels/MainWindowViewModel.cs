@@ -157,7 +157,6 @@ namespace Worktime.ViewModels
                 {
                     Employee = currentEmployee;
                 }
-                Employee.Overtime = EmployeeManager.CalculateTotalOvertime(Employee);
                 RefreshView();
             }
         }

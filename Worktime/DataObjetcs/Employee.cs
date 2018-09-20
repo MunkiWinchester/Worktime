@@ -16,7 +16,6 @@ namespace Worktime.DataObjetcs
         private TimeSpan _weekWorkTimeRegular;
         private TimeSpan _workTimeRegular;
         private bool _isInitial = true;
-        private TimeSpan _overTime;
 
         public Employee()
         {
@@ -25,19 +24,17 @@ namespace Worktime.DataObjetcs
             Times = new ObservableCollection<Times>();
             WeekWorkTimeRegular = new TimeSpan(40, 0, 0);
             WorkTimeRegular = new TimeSpan(8, 0, 0);
-            Overtime = new TimeSpan(0, 0, 0);
             _isInitial = false;
         }
 
         [JsonConstructor]
-        public Employee(TimeSpan breakTimeRegular, IsoWeek isoWeek, ObservableCollection<Times> times, TimeSpan weekWorkTimeRegular, TimeSpan workTimeRegular, TimeSpan overTime)
+        public Employee(TimeSpan breakTimeRegular, IsoWeek isoWeek, ObservableCollection<Times> times, TimeSpan weekWorkTimeRegular, TimeSpan workTimeRegular)
         {
             BreakTimeRegular = breakTimeRegular;
             IsoWeek = isoWeek;
             Times = times;
             WeekWorkTimeRegular = weekWorkTimeRegular;
             WorkTimeRegular = workTimeRegular;
-            Overtime = overTime;
             _isInitial = false;
         }
 
@@ -137,7 +134,7 @@ namespace Worktime.DataObjetcs
         }
 
         [JsonIgnore]
-        public TimeSpan Overtime { get => _overTime; set => SetField(ref _overTime, value); }
+        public TimeSpan Overtime => EmployeeManager.CalculateTotalOvertime(this);
 
         [JsonIgnore]
         public TimeSpan EstimatedCut =>

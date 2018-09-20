@@ -106,36 +106,6 @@ namespace Worktime.Views
         }
 
         /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            //Settings.Default.SelectedAccent = string.IsNullOrWhiteSpace(Settings.Default.SelectedAccent)
-            //    ? "Crimson"
-            //    : Settings.Default.SelectedAccent;
-            //Settings.Default.SelectedTheme = string.IsNullOrWhiteSpace(Settings.Default.SelectedTheme)
-            //    ? "BaseDark"
-            //    : Settings.Default.SelectedTheme;
-            //Settings.Default.Save();
-
-            //try
-            //{
-            //    ThemeManager.ChangeAppStyle(Application.Current,
-            //        ThemeManager.GetAccent(Settings.Default.SelectedAccent),
-            //        ThemeManager.GetAppTheme(Settings.Default.SelectedTheme));
-            //}
-            //catch (Exception exception)
-            //{
-            //    Console.WriteLine(exception);
-            //    ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent("Crimson"),
-            //        ThemeManager.GetAppTheme("BaseDark"));
-            //}
-
-            //_viewModel.InitControl();
-        }
-
-        /// <summary>
         /// Occurs when the running state was changed
         /// </summary>
         /// <param name="running">The running state</param>

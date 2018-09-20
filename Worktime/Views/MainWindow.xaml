@@ -16,7 +16,6 @@
                    BorderBrush="{Binding ElementName=_metroWindow, Path=WindowTitleBrush}"
                    Closing="MainWindow_OnClosing"
                    Deactivated="MainWindow_OnDeactivated"
-                   Loaded="MainWindow_OnLoaded"
                    NonActiveWindowTitleBrush="{Binding ElementName=_metroWindow, Path=WindowTitleBrush}"
                    ResizeMode="CanMinimize"
                    WindowStartupLocation="Manual">

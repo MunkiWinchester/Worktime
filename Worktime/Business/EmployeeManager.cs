@@ -103,8 +103,6 @@ namespace Worktime.Business
             employee.BreakTimeRegular = new TimeSpan(0,
                 Convert.ToInt32(Math.Floor(employee.WorkTimeRegular.TotalHours / 3) * 15), 0);
 
-            employee.Overtime = CalculateTotalOvertime(employee);
-
             SaveEmployeeValues(employee);
             employee.TrackChanges(true);
             return employee;

@@ -13,20 +13,24 @@ namespace Worktime
 
         public static async void Initialize()
         {
+#if !DEBUG
             var splashScreenWindow = new SplashScreenWindow();
             var updateCheck = Updater.Updating.Updater.StartupUpdateCheck(splashScreenWindow);
             while (!updateCheck.IsCompleted)
             {
                 await Task.Delay(500);
             }
+#endif
 
             UiTheme.InitializeTheme();
             MainWindow = new MainWindow();
             MainWindow.LoadConfigSettings();
             MainWindow.Show();
+#if !DEBUG
             splashScreenWindow.Close();
 
             UpdateOverlayAsync();
+#endif
         }
 
         private static async void UpdateOverlayAsync()

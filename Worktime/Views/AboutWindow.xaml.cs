@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Deployment.Application;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -55,9 +56,7 @@ namespace Worktime.Views
         /// <returns>The version of the assembly</returns>
         private static Version GetVersion()
         {
-            return ApplicationDeployment.IsNetworkDeployed
-                ? ApplicationDeployment.CurrentDeployment.CurrentVersion
-                : new Version(0, 0, 0, 1);
+            return Assembly.GetExecutingAssembly().GetName().Version;
         }
     }
 }
