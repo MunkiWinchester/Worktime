@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Shell;
 using MahApps.Metro;
+using Worktime.Business;
 using Worktime.Properties;
 using Worktime.ViewModels;
 using Application = System.Windows.Application;
@@ -74,7 +75,7 @@ namespace Worktime.Views
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
+                Logger.Error("LoadConfigSettings()", exception);
                 ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent("Crimson"),
                     ThemeManager.GetAppTheme("BaseDark"));
             }

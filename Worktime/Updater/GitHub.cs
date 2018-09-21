@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Worktime.Business;
 
 namespace Worktime.Updater
 {
@@ -13,21 +14,21 @@ namespace Worktime.Updater
         {
             try
             {
-                Console.WriteLine($"{user}/{repo}: Checking for updates (current={version})");
+                Logger.Info($"{user}/{repo}: Checking for updates (current={version})");
                 var latest = await GetLatestRelease(user, repo);
-                if (latest.Assets.Count > 0)
+                if (latest != null && latest.Assets.Count > 0)
                 {
                     if (latest.GetVersion()?.CompareTo(version) > 0)
                     {
-                        Console.WriteLine($"{user}/{repo}: A new version is available (latest={latest.Tag})");
+                        Logger.Info($"{user}/{repo}: A new version is available (latest={latest.Tag})");
                         return latest;
                     }
-                    Console.WriteLine($"{user}/{repo}: We are up-to-date (latest={latest.Tag})");
+                    Logger.Info($"{user}/{repo}: We are up-to-date (latest={latest.Tag})");
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Error("CheckForUpdate(string user, string repo, Version version)", e);
             }
             return null;
         }
@@ -45,10 +46,11 @@ namespace Worktime.Updater
                 }
                 return JsonConvert.DeserializeObject<Release>(json);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                Logger.Error("GetLatestRelease(string user, string repo)", e);
             }
+            return null;
         }
 
         public static async Task<string> DownloadRelease(Release release, string downloadDirectory)
@@ -62,7 +64,7 @@ namespace Worktime.Updater
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Error("DownloadRelease(Release release, string downloadDirectory)", e);
                 return null;
             }
         }

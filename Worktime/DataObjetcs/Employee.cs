@@ -185,7 +185,7 @@ namespace Worktime.DataObjetcs
             if (!_isInitial)
             {
                 HasChanges = true;
-                Console.WriteLine($"{DateTime.Now:t}: Value Changed: {this} - {sender} - {e}");
+                Logger.Info($"{DateTime.Now:t}: Value Changed: {this} - {sender} - {e}");
             }
         }
 

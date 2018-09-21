@@ -84,7 +84,7 @@ namespace Worktime.Business
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error creating WindowsAccent: " + e);
+                Logger.Error("Error creating WindowsAccent.", e);
                 return;
             }
 
@@ -116,7 +116,7 @@ namespace Worktime.Business
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Logger.Error("IsWindows10()", ex);
                 return false;
             }
         }
@@ -130,7 +130,7 @@ namespace Worktime.Business
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Logger.Error("IsWindows8()", ex);
                 return false;
             }
         }

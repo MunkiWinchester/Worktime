@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Newtonsoft.Json;
+using Worktime.Business;
 using WpfUtility.Services;
 
 namespace Worktime.DataObjetcs
@@ -63,7 +64,7 @@ namespace Worktime.DataObjetcs
             {
                 OnChange?.Invoke(this, nameof(TimeFrame));
                 TriggerPropertiesOnChanged();
-                Console.WriteLine($"{DateTime.Now:t}: Value Changed: {GetType().Name} - {nameof(sender)} - {e}");
+                Logger.Info($"{DateTime.Now:t}: Value Changed: {GetType().Name} - {nameof(sender)} - {e}");
             }
         }
 

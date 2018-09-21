@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using Squirrel;
+using Worktime.Business;
 
 namespace Worktime.Updater.Updating
 {
@@ -34,9 +35,9 @@ namespace Worktime.Updater.Updating
                     StatusBar.Visibility = Visibility.Visible;
                 }
             }
-            catch(Exception ex)
+            catch(Exception e)
             {
-                Console.WriteLine(ex);
+                Logger.Error("CheckForUpdates(bool force = false)", e);
             }
         }
 
@@ -47,7 +48,7 @@ namespace Worktime.Updater.Updating
             else
                 _releaseUrls = new ReleaseUrls();
             var url = _releaseUrls.GetReleaseUrl(release);
-            Console.WriteLine($"using '{release}' release: {url}");
+            Logger.Info($"using '{release}' release: {url}");
             return url;
         }
 
@@ -61,7 +62,7 @@ namespace Worktime.Updater.Updating
         {
             try
             {
-                Console.WriteLine("Checking for updates");
+                Logger.Info("Checking for updates");
                 bool updated;
                 using(var mgr = await GetUpdateManager())
                 {
@@ -86,13 +87,13 @@ namespace Worktime.Updater.Updating
 
                 if (updated)
                 {
-                    Console.WriteLine("Update complete, restarting");
+                    Logger.Info("Update complete, restarting");
                     UpdateManager.RestartApp();
                 }
             }
-            catch(Exception ex)
+            catch(Exception e)
             {
-                Console.WriteLine(ex);
+                Logger.Error("StartupUpdateCheck(SplashScreenWindow splashScreenWindow)", e);
             }
         }
 
@@ -108,8 +109,8 @@ namespace Worktime.Updater.Updating
                     File.Move(stubPath, newStubPath);
                 }
                 catch(Exception e)
-                {
-                    Console.WriteLine($"Could not move ExecutionStub. {e}");
+				{
+					Logger.Error("Could not move ExecutionStub.", e);
                 }
             }
         }
@@ -122,9 +123,9 @@ namespace Worktime.Updater.Updating
                 if(File.Exists(file))
                     File.Delete(file);
             }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex);
+            catch(Exception e)
+			{
+				Logger.Error("CleanUpInstallerFile()", e);
             }
         }
 
@@ -132,46 +133,45 @@ namespace Worktime.Updater.Updating
         {
             try
             {
-                Console.WriteLine($"ignoreDelta={ignoreDelta})");
                 var updateInfo = await mgr.CheckForUpdate(ignoreDelta);
                 if(!updateInfo.ReleasesToApply.Any())
                 {
-                    Console.WriteLine("No new updated available");
+                    Logger.Info("No new updated available");
                     return false;
                 }
                 var latest = updateInfo.ReleasesToApply.LastOrDefault()?.Version;
                 var current = mgr.CurrentlyInstalledVersion();
                 if(latest <= current)
                 {
-                    Console.WriteLine($"{latest}). Not downloading updates.");
+					Logger.Info($"{latest}). Not downloading updates.");
                     return false;
                 }
                 if(IsRevisionIncrement(current?.Version, latest?.Version))
                 {
-                    Console.WriteLine($"{latest}) is revision increment. Updating in background.");
+					Logger.Info($"{latest}) is revision increment. Updating in background.");
                 }
-                Console.WriteLine($"{(ignoreDelta ? "" : "delta ")}releases, latest={latest?.Version}");
+				Logger.Info($"{(ignoreDelta ? "" : "delta ")}releases, latest={latest?.Version}");
                 if(splashScreenWindow != null)
                     await mgr.DownloadReleases(updateInfo.ReleasesToApply, splashScreenWindow.Updating);
                 else
                     await mgr.DownloadReleases(updateInfo.ReleasesToApply);
                 splashScreenWindow?.Updating(100);
-                Console.WriteLine("Applying releases");
+				Logger.Info("Applying releases");
                 if(splashScreenWindow != null)
                     await mgr.ApplyReleases(updateInfo, splashScreenWindow.Installing);
                 else
                     await mgr.ApplyReleases(updateInfo);
                 splashScreenWindow?.Installing(100);
                 await mgr.CreateUninstallerRegistryEntry();
-                Console.WriteLine("Done");
+				Logger.Info("Done");
                 return true;
             }
-            catch(Exception ex)
+            catch(Exception e)
             {
                 if(ignoreDelta)
                     return false;
-                if(ex is Win32Exception)
-                    Console.WriteLine("Not able to apply deltas, downloading full release");
+                if(e is Win32Exception)
+					Logger.Error("Not able to apply deltas, downloading full release", e);
                 return await SquirrelUpdate(mgr, splashScreenWindow, true);
             }
         }
@@ -186,7 +186,7 @@ namespace Worktime.Updater.Updating
 
         internal static void StartUpdate()
         {
-            Console.WriteLine("Restarting...");
+            Logger.Info("Restarting...");
             UpdateManager.RestartApp();
         }
     }

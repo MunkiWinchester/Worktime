@@ -57,7 +57,7 @@ namespace Worktime.Business
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Error("Problem while loading values.", e);
             }
             return conDic.Values.ToList();
         }
