@@ -30,7 +30,7 @@ namespace Worktime.Views
         public AboutWindow(Window owner) : this()
         {
             Owner = owner;
-            _textBlockVersion.Text = $"Version: {GetVersion()}";
+            _textBlockVersion.Text = $"Version: {GetVersion().ToString(3)}";
         }
 
         /// <summary>

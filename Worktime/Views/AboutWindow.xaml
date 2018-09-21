@@ -73,7 +73,7 @@
         <TextBlock x:Name="_textBlockVersion"
                    Grid.Row="1"
                    Grid.Column="0"
-                   Text="Version: 0.0.0.1" />
+                   Text="Version: 0.0.1" />
         <TextBlock Grid.Row="2"
                    Grid.Column="0">
             <Hyperlink NavigateUri="https://github.com/MunkiWinchester/Worktime/releases"

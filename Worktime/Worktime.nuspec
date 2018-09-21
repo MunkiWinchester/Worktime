@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Worktime</id>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <title>Worktime</title>
     <authors>Eike Stremlau</authors>
     <owners>Eike Stremlau</owners>
@@ -15,9 +15,6 @@
     <tags>Worktime</tags>
   </metadata>
   <files>
-    <file src="bin\Release\Worktime.application" target="lib\net461\Worktime.application" />
-    <file src="bin\Release\Worktime.exe" target="lib\net461\Worktime.exe" />
-    <file src="bin\Release\Worktime.exe.config" target="lib\net461\Worktime.exe.config" />
-    <file src="bin\Release\Worktime.exe.manifest" target="lib\net461\Worktime.exe.manifest" />
+    <file src="bin\Release\*.*" target="lib\net461\" exclude="*.pdb;*.vshost.*"/>
   </files>
 </package>
