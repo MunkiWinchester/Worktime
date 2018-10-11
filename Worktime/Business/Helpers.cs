@@ -16,7 +16,7 @@ namespace Worktime.Business
             if (actualTime.TotalMinutes.Equals(0d) || regularTime.TotalMinutes.Equals(0d))
                 return 0;
 
-            var result = actualTime.TotalMinutes / regularTime.TotalMinutes;
+            var result = actualTime.TotalMilliseconds / regularTime.TotalMilliseconds;
             result = result * 100;
             return result;
         }

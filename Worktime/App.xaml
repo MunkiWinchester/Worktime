@@ -1,7 +1,10 @@
-﻿<Application x:Class="Worktime.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Startup="Application_Startup">
+﻿<Application
+    x:Class="Worktime.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:tb="http://www.hardcodet.net/taskbar"
+    xmlns:views="clr-namespace:Worktime.Views"
+    Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -30,6 +33,12 @@
                 <Setter Property="Foreground" Value="#FF333333" />
                 <Setter Property="Background" Value="#FFD8D8D9" />
             </Style>
+            <SolidColorBrush x:Key="DayRed">#8B2222</SolidColorBrush>
+            <SolidColorBrush x:Key="DayGreen">#228B22</SolidColorBrush>
+            <SolidColorBrush x:Key="PauseYellow">#FF8800</SolidColorBrush>
+            <SolidColorBrush x:Key="PauseGreen">#32CD32</SolidColorBrush>
+            <SolidColorBrush x:Key="WeekRed">#640000</SolidColorBrush>
+            <SolidColorBrush x:Key="WeekGreen">#006400</SolidColorBrush>
             <ImageSource x:Key="WorktimeImage">
                 /Worktime;component/Resources/Images/Temp.png
             </ImageSource>
@@ -39,6 +48,15 @@
             <ImageSource x:Key="WorktimeIconPng">
                 /Worktime;component/Resources/Images/Utilities-clock.png
             </ImageSource>
+            <tb:TaskbarIcon
+                x:Key="TaskbarIcon"
+                IconSource="/Resources/Images/Utilities-clock.ico"
+                MenuActivation="RightClick"
+                ToolTip="Keyboard Audio-Visualizer">
+                <tb:TaskbarIcon.TrayToolTip>
+                    <views:TrayToolTip />
+                </tb:TaskbarIcon.TrayToolTip>
+            </tb:TaskbarIcon>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

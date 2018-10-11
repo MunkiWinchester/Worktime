@@ -17,7 +17,7 @@ namespace Worktime.ViewModels
         /// The delegate for the progress changed event
         /// </summary>
         /// <param name="percent">The percent value</param>
-        public delegate void ProgressEvent(double percent, string notifyIconText);
+        public delegate void ProgressEvent(Employee employee, double percent);
 
         /// <summary>
         /// The delegate for the running state event
@@ -48,6 +48,9 @@ namespace Worktime.ViewModels
             // Activate those timers in the InitControl()
         }
 
+        /// <summary>
+        /// Property to define if the start button is enabled (true ^= not running)
+        /// </summary>
         public bool StartEnabled
         {
             get => _startEnabled;
@@ -58,6 +61,9 @@ namespace Worktime.ViewModels
             }
         }
 
+        /// <summary>
+        /// Property to define if the stop button is enabled (true ^= running)
+        /// </summary>
         public bool StopEnabled
         {
             get => _stopEnabled;
@@ -166,6 +172,7 @@ namespace Worktime.ViewModels
             EmployeeManager.AddStamp(Employee);
             StartEnabled = StopEnabled;
             StopEnabled = !StopEnabled;
+            RunningStateChanged?.Invoke(StopEnabled);
         }
 
         /// <summary>
@@ -212,7 +219,6 @@ namespace Worktime.ViewModels
         /// </summary>
         private void RefreshValues()
         {
-            RunningStateChanged?.Invoke(false);
             var employee = EmployeeManager.LoadEmployeeValues();
 
             Employee = employee;
@@ -241,11 +247,8 @@ namespace Worktime.ViewModels
                 WeekPercentageValue =
                     Helpers.CalculatePercentage(employee.WeekWorkTimeReal, employee.WeekWorkTimeRegular);
 
-                RunningStateChanged?.Invoke(true);
-                ProgressChanged?.Invoke(DayPercentageValue, 
-$@"Worked: {employee.WorkTimeReal.ToFormatedString()} ({DayPercentageValue:0.##}%)
-Est. cut: {employee.EstimatedCut.ToFormatedString()}
-Overtime: {employee.Overtime.ToFormatedString()}");
+                ProgressChanged?.Invoke(employee, DayPercentageValue);
+                RunningStateChanged?.Invoke(StopEnabled);
 
                 Employee = employee;
             }

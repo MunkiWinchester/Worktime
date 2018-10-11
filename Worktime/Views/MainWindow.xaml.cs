@@ -2,11 +2,15 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Media;
 using System.Windows.Shell;
+using Hardcodet.Wpf.TaskbarNotification;
 using MahApps.Metro;
 using Worktime.Business;
+using Worktime.DataObjetcs;
 using Worktime.Properties;
 using Worktime.ViewModels;
+using WpfUtility.Services;
 using Application = System.Windows.Application;
 
 namespace Worktime.Views
@@ -18,11 +22,6 @@ namespace Worktime.Views
     public partial class MainWindow
     {
         /// <summary>
-        /// Contains the notify icon
-        /// </summary>
-        private NotifyIcon _notifyIcon;
-
-        /// <summary>
         /// Contains the view model
         /// </summary>
         private MainWindowViewModel _viewModel = new MainWindowViewModel();
@@ -31,6 +30,8 @@ namespace Worktime.Views
         /// true if the timer reached the end, otherwise false
         /// </summary>
         private bool _endReached;
+
+        private TaskbarIcon _taskbarIcon;
 
         /// <inheritdoc />
         /// <summary>
@@ -50,14 +51,9 @@ namespace Worktime.Views
             _viewModel.ProgressChanged += _viewModel_ProgressChanged;
             _viewModel.RunningStateChanged += _viewModel_RunningStateChanged;
 
-            _notifyIcon =
-                new NotifyIcon
-                {
-                    Icon = Properties.Resources.Utilities_clock,
-                    Visible = true,
-                    Text = @"Worktime!"
-                };
-            _notifyIcon.Click += NotifyIconOnClick;
+            _taskbarIcon = (TaskbarIcon)FindResource("TaskbarIcon");
+            _taskbarIcon.DoubleClickCommand = new DelegateCommand(NotifyIconOnClick);
+
 
             Settings.Default.SelectedAccent = string.IsNullOrWhiteSpace(Settings.Default.SelectedAccent)
                 ? "Crimson"
@@ -88,7 +84,7 @@ namespace Worktime.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void NotifyIconOnClick(object sender, EventArgs eventArgs)
+        private void NotifyIconOnClick()
         {
             Show();
             WindowState = WindowState.Normal;
@@ -118,9 +114,18 @@ namespace Worktime.Views
                     return;
 
                 if (!_endReached)
+                {
                     TaskbarItemInfo.ProgressState = running
                         ? TaskbarItemProgressState.Normal
                         : TaskbarItemProgressState.Paused;
+
+                    if (_taskbarIcon.TrayToolTip is TrayToolTip trayToolTip)
+                    {
+                        trayToolTip.ProgressBarColor = running
+                            ? (SolidColorBrush)Application.Current.FindResource("DayGreen")
+                            : (SolidColorBrush)Application.Current.FindResource("PauseYellow");
+                    }
+                }
             });
         }
 
@@ -129,9 +134,8 @@ namespace Worktime.Views
         /// </summary>
         /// <param name="percent">The percent value</param>
         /// <param name="notifyIconText"></param>
-        private void _viewModel_ProgressChanged(double percent, string notifyIconText)
+        private void _viewModel_ProgressChanged(Employee employee, double percent)
         {
-            _notifyIcon.Text = notifyIconText;
             Application.Current?.Dispatcher.Invoke(() =>
             {
                 if (TaskbarItemInfo == null)
@@ -148,6 +152,16 @@ namespace Worktime.Views
                 {
                     TaskbarItemInfo.ProgressValue = value;
                     TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+                }
+
+                if (_taskbarIcon.TrayToolTip is TrayToolTip trayToolTip)
+                {
+                    trayToolTip.Employee = employee;
+                    trayToolTip.ProgressBarValue = percent;
+
+                    trayToolTip.ProgressBarColor = _endReached
+                        ? (SolidColorBrush)Application.Current.FindResource("DayRed")
+                        : (SolidColorBrush)Application.Current.FindResource("DayGreen");
                 }
             });
         }
