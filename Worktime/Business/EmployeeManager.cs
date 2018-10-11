@@ -85,7 +85,16 @@ namespace Worktime.Business
             employee.Times = new ObservableCollection<Times>(employee.Times.OrderBy(t => t.Date));
             foreach (var employeeTime in employee.Times)
                 employeeTime.TimeFrames =
-                    new ObservableCollection<TimeFrame>(employeeTime.TimeFrames.OrderBy(tf => tf.Begin));
+                    new ObservableCollection<TimeFrame>(
+                        employeeTime.TimeFrames
+                                        .Select(tf =>
+                                                {
+                                                    var tfEdited = tf;
+                                                    if(employeeTime.Date.DayOfYear != DateTime.Now.DayOfYear)
+                                                        tfEdited.IsCurrent = false;
+                                                    return tfEdited;
+                                                })
+                                        .OrderBy(tf => tf.Begin));
 
             if (employee.Times.All(x => x.Date.DayOfYear != DateTime.Now.DayOfYear))
                 employee.Times.Add(new Times

@@ -49,7 +49,7 @@ namespace Worktime.DataObjetcs
             set
             {
                 var end = new TimeSpan?();
-                if (value is TimeSpan notNullValue)
+                if (value is TimeSpan notNullValue && notNullValue != TimeSpan.Zero)
                     end = new TimeSpan(notNullValue.Hours, notNullValue.Minutes, notNullValue.Seconds);
                 else
                     end = null;
