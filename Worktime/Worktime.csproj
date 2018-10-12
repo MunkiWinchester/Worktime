@@ -211,8 +211,11 @@
     <Compile Include="Business\Helpers.cs" />
     <Compile Include="DataObjetcs\IsoWeek.cs" />
     <Compile Include="DataObjetcs\TimeFrame.cs" />
-    <Compile Include="Views\TrayToolTip.xaml.cs">
-      <DependentUpon>TrayToolTip.xaml</DependentUpon>
+    <Compile Include="Views\Tray\ContextMenu.xaml.cs">
+      <DependentUpon>ContextMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tray\ToolTip.xaml.cs">
+      <DependentUpon>ToolTip.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Custom\Accent\FireOrange.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -298,7 +301,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\TrayToolTip.xaml">
+    <Page Include="Views\Tray\ContextMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Tray\ToolTip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

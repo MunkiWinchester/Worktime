@@ -3,39 +3,39 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Worktime.DataObjetcs;
 
-namespace Worktime.Views
+namespace Worktime.Views.Tray
 {
     /// <summary>
     /// Interaction logic for TrayToolTip.xaml
     /// </summary>
-    public partial class TrayToolTip : UserControl
+    public partial class ToolTip : UserControl
     {
         /// <summary>
         /// DependencyProperty for the progress bar color
         /// </summary>
         public static readonly DependencyProperty EmployeeProperty = DependencyProperty.Register(
-            nameof(Employee), typeof(Employee), typeof(TrayToolTip),
+            nameof(Employee), typeof(Employee), typeof(ToolTip),
             new PropertyMetadata(new Employee()));
 
         /// <summary>
         /// DependencyProperty for the progress bar color
         /// </summary>
         public static readonly DependencyProperty ProgressBarColorProperty = DependencyProperty.Register(
-            nameof(ProgressBarColor), typeof(SolidColorBrush), typeof(TrayToolTip),
+            nameof(ProgressBarColor), typeof(SolidColorBrush), typeof(ToolTip),
             new PropertyMetadata((SolidColorBrush) Application.Current.FindResource("DayGreen")));
 
         /// <summary>
         /// DependencyProperty for the progress bar color
         /// </summary>
         public static readonly DependencyProperty FilledProgressBarColorProperty = DependencyProperty.Register(
-            nameof(FilledProgressBarColor), typeof(SolidColorBrush), typeof(TrayToolTip),
+            nameof(FilledProgressBarColor), typeof(SolidColorBrush), typeof(ToolTip),
             new PropertyMetadata((SolidColorBrush) Application.Current.FindResource("DayRed")));
 
         /// <summary>
         /// DependencyProperty for the progress bar value
         /// </summary>
         public static readonly DependencyProperty ProgressBarValueProperty = DependencyProperty.Register(
-            nameof(ProgressBarValue), typeof(double), typeof(TrayToolTip), new PropertyMetadata(0d));
+            nameof(ProgressBarValue), typeof(double), typeof(ToolTip), new PropertyMetadata(0d));
 
         /// <summary>
         /// Value of the top label
@@ -78,7 +78,7 @@ namespace Worktime.Views
             set => SetValue(ProgressBarColorProperty, value);
         }
 
-        public TrayToolTip()
+        public ToolTip()
         {
             InitializeComponent();
         }

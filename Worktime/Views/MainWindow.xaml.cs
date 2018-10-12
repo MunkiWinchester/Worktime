@@ -10,8 +10,10 @@ using Worktime.Business;
 using Worktime.DataObjetcs;
 using Worktime.Properties;
 using Worktime.ViewModels;
+using Worktime.Views.Tray;
 using WpfUtility.Services;
 using Application = System.Windows.Application;
+using ToolTip = Worktime.Views.Tray.ToolTip;
 
 namespace Worktime.Views
 {
@@ -52,8 +54,16 @@ namespace Worktime.Views
             _viewModel.RunningStateChanged += _viewModel_RunningStateChanged;
 
             _taskbarIcon = (TaskbarIcon)FindResource("TaskbarIcon");
-            _taskbarIcon.DoubleClickCommand = new DelegateCommand(NotifyIconOnClick);
-
+            _taskbarIcon.DoubleClickCommand = new DelegateCommand(() => NotifyIconOnClick(false));
+            if (_taskbarIcon.TrayPopup is Tray.ContextMenu contextMenu)
+            {
+                contextMenu.CloseCommand = new DelegateCommand(Close);
+                contextMenu.MinimizeShowCommand = new DelegateCommand(() => NotifyIconOnClick(WindowState == WindowState.Normal));
+                contextMenu.EditCommand = _viewModel.EditCommand;
+                contextMenu.SettingsCommand = _viewModel.SettingsClickedCommand;
+                contextMenu.AboutCommand = _viewModel.AboutClickedCommand;
+                contextMenu.StartStopCommand = _viewModel.StartStopCommand;
+            }
 
             Settings.Default.SelectedAccent = string.IsNullOrWhiteSpace(Settings.Default.SelectedAccent)
                 ? "Crimson"
@@ -84,10 +94,29 @@ namespace Worktime.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void NotifyIconOnClick()
+        private void NotifyIconOnClick(bool minimizeToTray)
         {
-            Show();
-            WindowState = WindowState.Normal;
+            var contextMenu = _taskbarIcon.TrayPopup as Tray.ContextMenu;
+
+            if (!minimizeToTray)
+            {
+                // yes doubled entry, but it ain't stupid if it works
+                WindowState = WindowState.Normal;
+                Activate();
+                Show();
+                WindowState = WindowState.Normal;
+
+                if(contextMenu != null)
+                    contextMenu.IsMinimized = false;
+            }
+            else
+            {
+                Hide();
+                WindowState = WindowState.Minimized;
+
+                if (contextMenu != null)
+                    contextMenu.IsMinimized = true;
+            }
         }
 
         /// <inheritdoc />
@@ -97,6 +126,8 @@ namespace Worktime.Views
         /// <param name="e"></param>
         protected override void OnStateChanged(EventArgs e)
         {
+            if (_taskbarIcon.TrayPopup is Tray.ContextMenu contextMenu)
+                contextMenu.IsMinimized = WindowState == WindowState.Minimized;
             if (WindowState == WindowState.Minimized)
                 Hide();
             base.OnStateChanged(e);
@@ -119,13 +150,16 @@ namespace Worktime.Views
                         ? TaskbarItemProgressState.Normal
                         : TaskbarItemProgressState.Paused;
 
-                    if (_taskbarIcon.TrayToolTip is TrayToolTip trayToolTip)
+                    if (_taskbarIcon.TrayToolTip is ToolTip trayToolTip)
                     {
                         trayToolTip.ProgressBarColor = running
                             ? (SolidColorBrush)Application.Current.FindResource("DayGreen")
                             : (SolidColorBrush)Application.Current.FindResource("PauseYellow");
                     }
                 }
+
+                if (_taskbarIcon.TrayPopup is Tray.ContextMenu contextMenu)
+                    contextMenu.IsRunning = running;
             });
         }
 
@@ -154,7 +188,7 @@ namespace Worktime.Views
                     TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
                 }
 
-                if (_taskbarIcon.TrayToolTip is TrayToolTip trayToolTip)
+                if (_taskbarIcon.TrayToolTip is ToolTip trayToolTip)
                 {
                     trayToolTip.Employee = employee;
                     trayToolTip.ProgressBarValue = percent;

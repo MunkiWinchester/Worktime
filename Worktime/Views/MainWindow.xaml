@@ -9,7 +9,6 @@
     xmlns:Services="clr-namespace:WpfUtility.Services;assembly=WpfUtility"
     xmlns:ViewModels="clr-namespace:Worktime.ViewModels"
     xmlns:Views1="clr-namespace:Worktime.Views"
-    xmlns:tb="http://www.hardcodet.net/taskbar"
     x:Name="_metroWindow"
     Title="Worktime"
     Width="325"
@@ -64,11 +63,11 @@
             </Button>
             <Button Command="{Binding AboutClickedCommand}" CommandParameter="{Binding ElementName=_metroWindow}">
                 <Rectangle
-                    Width="10"
+                    Width="20"
                     Height="20"
                     Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_information}" />
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_information_circle}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
@@ -91,13 +90,13 @@
         <Button
             Grid.Row="0"
             Grid.Column="0"
-            Command="{Binding StartCommand}"
+            Command="{Binding StartStopCommand}"
             Content="Start"
             IsEnabled="{Binding StartEnabled}" />
         <Button
             Grid.Row="0"
             Grid.Column="1"
-            Command="{Binding StopCommand}"
+            Command="{Binding StartStopCommand}"
             Content="Stop"
             IsEnabled="{Binding StopEnabled}" />
         <Button

@@ -109,8 +109,8 @@ namespace Worktime.Updater.Updating
                     File.Move(stubPath, newStubPath);
                 }
                 catch(Exception e)
-				{
-					Logger.Error("Could not move ExecutionStub.", e);
+                {
+                    Logger.Error("Could not move ExecutionStub.", e);
                 }
             }
         }
@@ -124,8 +124,8 @@ namespace Worktime.Updater.Updating
                     File.Delete(file);
             }
             catch(Exception e)
-			{
-				Logger.Error("CleanUpInstallerFile()", e);
+            {
+                Logger.Error("CleanUpInstallerFile()", e);
             }
         }
 
@@ -143,27 +143,27 @@ namespace Worktime.Updater.Updating
                 var current = mgr.CurrentlyInstalledVersion();
                 if(latest <= current)
                 {
-					Logger.Info($"{latest}). Not downloading updates.");
+                    Logger.Info($"{latest}). Not downloading updates.");
                     return false;
                 }
                 if(IsRevisionIncrement(current?.Version, latest?.Version))
                 {
-					Logger.Info($"{latest}) is revision increment. Updating in background.");
+                    Logger.Info($"{latest}) is revision increment. Updating in background.");
                 }
-				Logger.Info($"{(ignoreDelta ? "" : "delta ")}releases, latest={latest?.Version}");
+                Logger.Info($"{(ignoreDelta ? "" : "delta ")}releases, latest={latest?.Version}");
                 if(splashScreenWindow != null)
                     await mgr.DownloadReleases(updateInfo.ReleasesToApply, splashScreenWindow.Updating);
                 else
                     await mgr.DownloadReleases(updateInfo.ReleasesToApply);
                 splashScreenWindow?.Updating(100);
-				Logger.Info("Applying releases");
+                Logger.Info("Applying releases");
                 if(splashScreenWindow != null)
                     await mgr.ApplyReleases(updateInfo, splashScreenWindow.Installing);
                 else
                     await mgr.ApplyReleases(updateInfo);
                 splashScreenWindow?.Installing(100);
                 await mgr.CreateUninstallerRegistryEntry();
-				Logger.Info("Done");
+                Logger.Info("Done");
                 return true;
             }
             catch(Exception e)
@@ -171,7 +171,7 @@ namespace Worktime.Updater.Updating
                 if(ignoreDelta)
                     return false;
                 if(e is Win32Exception)
-					Logger.Error("Not able to apply deltas, downloading full release", e);
+                    Logger.Error("Not able to apply deltas, downloading full release", e);
                 return await SquirrelUpdate(mgr, splashScreenWindow, true);
             }
         }

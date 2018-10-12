@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Timers;
+using System.Windows;
 using System.Windows.Input;
+using Hardcodet.Wpf.TaskbarNotification;
 using Worktime.Business;
 using Worktime.DataObjetcs;
-using Worktime.Extension;
 using Worktime.Views;
 using WpfUtility.Services;
 
@@ -144,12 +145,7 @@ namespace Worktime.ViewModels
         /// <summary>
         /// Command to refresh the values
         /// </summary>
-        public ICommand StartCommand => new DelegateCommand(AddStamp);
-
-        /// <summary>
-        /// Command to refresh the values
-        /// </summary>
-        public ICommand StopCommand => new DelegateCommand(AddStamp);
+        public ICommand StartStopCommand => new DelegateCommand(AddStamp);
 
         private void EditTimeFrames(MainWindow mainWindow)
         {
@@ -258,7 +254,7 @@ namespace Worktime.ViewModels
         /// Opens the settings window centered on the main window
         /// </summary>
         /// <param name="mainWindow"></param>
-        private static void OpenSettings(MainWindow mainWindow)
+        private void OpenSettings(MainWindow mainWindow)
         {
             var settings = new SettingsWindow(mainWindow);
             settings.ShowDialog();
@@ -270,8 +266,8 @@ namespace Worktime.ViewModels
         /// <param name="mainWindow"></param>
         private static void OpenAbout(MainWindow mainWindow)
         {
-            var settings = new AboutWindow(mainWindow);
-            settings.ShowDialog();
+            var about = new AboutWindow(mainWindow);
+            about.ShowDialog();
         }
     }
 }
