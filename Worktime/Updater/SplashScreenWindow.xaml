@@ -10,8 +10,9 @@
     Height="400"
     AllowsTransparency="True"
     Background="Transparent"
+    Icon="/Worktime;component/Resources/Images/Utilities-clock.ico"
     ResizeMode="NoResize"
-    ShowInTaskbar="False"
+    ShowInTaskbar="True"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">

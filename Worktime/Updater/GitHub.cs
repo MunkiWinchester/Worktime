@@ -10,6 +10,7 @@ namespace Worktime.Updater
 {
     public class GitHub
     {
+        // TODO: Use this with zip..
         public static async Task<Release> CheckForUpdate(string user, string repo, Version version)
         {
             try

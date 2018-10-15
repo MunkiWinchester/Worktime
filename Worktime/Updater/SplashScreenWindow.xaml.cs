@@ -6,9 +6,9 @@ namespace Worktime.Updater
 {
     public partial class SplashScreenWindow : INotifyPropertyChanged
     {
-        private const string LocLoading = "SplashScreen_Text_Loading";
-        private const string LocUpdating = "SplashScreen_Text_Updating";
-        private const string LocInstalling = "SplashScreen_Text_Installing";
+        private const string LocLoading = "Text_Loading";
+        private const string LocUpdating = "Text_Updating";
+        private const string LocInstalling = "Text_Installing";
         private readonly string _updating = LocUpdating;
         private readonly string _installing = LocInstalling;
         private string _loadingString = LocLoading;
