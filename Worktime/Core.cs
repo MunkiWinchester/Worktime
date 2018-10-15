@@ -8,18 +8,20 @@ namespace Worktime
 {
     public static class Core
     {
-        private static int UpdateDelay => (int) TimeSpan.FromSeconds(10).TotalMilliseconds;
+        private static int UpdateDelay => (int) TimeSpan.FromMinutes(10).TotalMilliseconds;
         public static MainWindow MainWindow { get; set; }
 
         public static async void Initialize()
         {
 #if !DEBUG
             var splashScreenWindow = new SplashScreenWindow();
+            splashScreenWindow.Show();
             var updateCheck = Updater.Updating.Updater.StartupUpdateCheck(splashScreenWindow);
             while (!updateCheck.IsCompleted)
             {
                 await Task.Delay(500);
             }
+            splashScreenWindow.Close();
 #endif
 
             UiTheme.InitializeTheme();
@@ -27,8 +29,6 @@ namespace Worktime
             MainWindow.LoadConfigSettings();
             MainWindow.Show();
 #if !DEBUG
-            splashScreenWindow.Close();
-
             UpdateOverlayAsync();
 #endif
         }

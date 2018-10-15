@@ -1,8 +1,6 @@
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using Squirrel;
@@ -16,7 +14,6 @@ namespace Worktime.Updater.Updating
         private static TimeSpan _updateCheckDelay = new TimeSpan(0, 20, 0);
         private static bool ShouldCheckForUpdates()
             => DateTime.Now - _lastUpdateCheck >= _updateCheckDelay;
-        private static readonly string AppDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Assembly.GetExecutingAssembly().GetName().Name);
 
         public static async void CheckForUpdates(bool force = false)
         {
@@ -48,7 +45,7 @@ namespace Worktime.Updater.Updating
             else
                 _releaseUrls = new ReleaseUrls();
             var url = _releaseUrls.GetReleaseUrl(release);
-            Logger.Info($"using '{release}' release: {url}");
+            Logger.Info($"Using '{release}' release: {url}");
             return url;
         }
 
@@ -74,14 +71,11 @@ namespace Worktime.Updater.Updating
                         v =>
                         {
                             mgr.CreateShortcutForThisExe();
-                            FixStub();
                         },
                         onAppUninstall: v =>
                         {
                             mgr.RemoveShortcutForThisExe();
-                        },
-                        onFirstRun: CleanUpInstallerFile
-                        );
+                        });
                     updated = await SquirrelUpdate(mgr, splashScreenWindow);
                 }
 
@@ -94,38 +88,6 @@ namespace Worktime.Updater.Updating
             catch(Exception e)
             {
                 Logger.Error("StartupUpdateCheck(SplashScreenWindow splashScreenWindow)", e);
-            }
-        }
-
-        public static void FixStub()
-        {
-            var dir = new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName;
-            var stubPath = Path.Combine(dir, "HearthstoneDeckTracker_ExecutionStub.exe");
-            if(File.Exists(stubPath))
-            {
-                var newStubPath = Path.Combine(Directory.GetParent(dir).FullName, "HearthstoneDeckTracker.exe");
-                try
-                {
-                    File.Move(stubPath, newStubPath);
-                }
-                catch(Exception e)
-                {
-                    Logger.Error("Could not move ExecutionStub.", e);
-                }
-            }
-        }
-
-        private static void CleanUpInstallerFile()
-        {
-            try
-            {
-                var file = Path.Combine(AppDataPath, "HDT-Installer.exe");
-                if(File.Exists(file))
-                    File.Delete(file);
-            }
-            catch(Exception e)
-            {
-                Logger.Error("CleanUpInstallerFile()", e);
             }
         }
 
@@ -143,14 +105,13 @@ namespace Worktime.Updater.Updating
                 var current = mgr.CurrentlyInstalledVersion();
                 if(latest <= current)
                 {
-                    Logger.Info($"{latest}). Not downloading updates.");
+                    Logger.Info($"Installed version ({current}) is greater or equal ({latest}). Not downloading updates.");
                     return false;
                 }
                 if(IsRevisionIncrement(current?.Version, latest?.Version))
                 {
-                    Logger.Info($"{latest}) is revision increment. Updating in background.");
+                    Logger.Info($"Newest version ({latest}) is revision increment. Updating in background.");
                 }
-                Logger.Info($"{(ignoreDelta ? "" : "delta ")}releases, latest={latest?.Version}");
                 if(splashScreenWindow != null)
                     await mgr.DownloadReleases(updateInfo.ReleasesToApply, splashScreenWindow.Updating);
                 else
