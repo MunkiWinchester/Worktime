@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Worktime.Business;
+// Don't remove this!
 using Worktime.Updater;
 using Worktime.Views;
 
@@ -19,16 +20,18 @@ namespace Worktime
             var updateCheck = Updater.Updating.Updater.StartupUpdateCheck(splashScreenWindow);
             while (!updateCheck.IsCompleted)
             {
-                await Task.Delay(500);
+                await Task.Delay(TimeSpan.FromSeconds(0.5));
             }
-            splashScreenWindow.Close();
 #endif
 
             UiTheme.InitializeTheme();
             MainWindow = new MainWindow();
             MainWindow.LoadConfigSettings();
             MainWindow.Show();
+
 #if !DEBUG
+            // Only close it after opening MainWindow!
+            splashScreenWindow.Close();
             UpdateOverlayAsync();
 #endif
         }
