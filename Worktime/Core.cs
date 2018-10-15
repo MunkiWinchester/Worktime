@@ -19,7 +19,7 @@ namespace Worktime
             var updateCheck = Updater.Updating.Updater.StartupUpdateCheck(splashScreenWindow);
             while (!updateCheck.IsCompleted)
             {
-                await Task.Delay(500);
+                await Task.Delay(TimeSpan.FromSeconds(0.5));
             }
             splashScreenWindow.Close();
 #endif

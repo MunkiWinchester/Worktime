@@ -133,6 +133,8 @@ namespace Worktime.Updater.Updating
                     return false;
                 if(e is Win32Exception)
                     Logger.Error("Not able to apply deltas, downloading full release", e);
+                if (e is Exception)
+                    Logger.Error("Not able to apply update", e);
                 return await SquirrelUpdate(mgr, splashScreenWindow, true);
             }
         }
@@ -143,12 +145,6 @@ namespace Worktime.Updater.Updating
                 return false;
             return current.Major == latest.Major && current.Minor == latest.Minor && current.Build == latest.Build
                     && current.Revision < latest.Revision;
-        }
-
-        internal static void StartUpdate()
-        {
-            Logger.Info("Restarting...");
-            UpdateManager.RestartApp();
         }
     }
 }
