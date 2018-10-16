@@ -64,7 +64,6 @@ namespace Worktime.DataObjetcs
             {
                 OnChange?.Invoke(this, nameof(TimeFrame));
                 TriggerPropertiesOnChanged();
-                Logger.Info($"Value Changed: {GetType().Name} - {nameof(sender)} - {e}");
             }
         }
 

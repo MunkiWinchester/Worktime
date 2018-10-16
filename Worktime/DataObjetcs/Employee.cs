@@ -183,10 +183,7 @@ namespace Worktime.DataObjetcs
         private void ChangeHasChanges(object sender, string e)
         {
             if (!_isInitial)
-            {
                 HasChanges = true;
-                Logger.Info($"Value Changed: {this} - {sender} - {e}");
-            }
         }
 
         public void TrackChanges(bool activateTracking)

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Timers;
-using System.Windows;
 using System.Windows.Input;
-using Hardcodet.Wpf.TaskbarNotification;
 using Worktime.Business;
 using Worktime.DataObjetcs;
 using Worktime.Views;
@@ -26,7 +24,6 @@ namespace Worktime.ViewModels
         /// <param name="running">true if the timer is running, otherwise false</param>
         public delegate void RunningStateEvent(bool running);
 
-        private readonly Timer _timer30Min;
         private readonly Timer _timer30Sec;
         private double _breakPercentageValue;
         private double _dayPercentageValue;
@@ -44,8 +41,6 @@ namespace Worktime.ViewModels
 
             _timer30Sec = new Timer(TimeSpan.FromSeconds(30).TotalMilliseconds);
             _timer30Sec.Elapsed += Timer30SecOnElapsed;
-            _timer30Min = new Timer(TimeSpan.FromMinutes(30).TotalMilliseconds);
-            _timer30Min.Elapsed += Timer30MinOnElapsed;
             // Activate those timers in the InitControl()
         }
 
@@ -172,16 +167,6 @@ namespace Worktime.ViewModels
         }
 
         /// <summary>
-        /// Occures when the 30 min timer ticks
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="elapsedEventArgs"></param>
-        private void Timer30MinOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
-        {
-            RefreshValues();
-        }
-
-        /// <summary>
         /// Occures when the 1 sec timer ticks
         /// </summary>
         /// <param name="sender"></param>
@@ -207,7 +192,7 @@ namespace Worktime.ViewModels
         public void InitControl()
         {
             RefreshValues();
-            _timer30Sec.Enabled = _timer30Min.Enabled = true;
+            _timer30Sec.Enabled = true;
         }
 
         /// <summary>

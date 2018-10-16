@@ -62,6 +62,16 @@ namespace Worktime.Business
             return conDic.Values.ToList();
         }
 
+        /// <summary>
+        /// List with all employee values except the current active week
+        /// </summary>
+        private static List<Employee> _cachedEmployeeValues;
+
+        /// <summary>
+        /// Flag to indicte whether <see cref="_cachedEmployeeValues"/> are valid or not
+        /// </summary>
+        private static bool _cacheIsInvalid;
+
         private static Employee GetCurrentEmployeeValueFromJson()
         {
             var dirInfo = JsonSaveLocation;
@@ -120,8 +130,12 @@ namespace Worktime.Business
         public static TimeSpan CalculateTotalOvertime(Employee employee)
         {
             var overtime = new TimeSpan(0);
-            var employeeValues = GetEmployeeValuesFromJson();
-            foreach (var employeeValue in employeeValues.Where(ev => !ev.IsoWeek.Equals(employee.IsoWeek)))
+            if (_cachedEmployeeValues == null || _cacheIsInvalid)
+            {
+                _cachedEmployeeValues = GetEmployeeValuesFromJson().Where(ev => !ev.IsoWeek.Equals(employee.IsoWeek)).ToList();
+                _cacheIsInvalid = false;
+            }
+            foreach (var employeeValue in _cachedEmployeeValues)
             {
                 overtime += employeeValue.WeekWorkTimeReal - employeeValue.WeekWorkTimeRegular;
             }
@@ -134,6 +148,7 @@ namespace Worktime.Business
 
         public static void SaveEmployeeValues(Employee employee)
         {
+            _cacheIsInvalid = true;
             var json = JsonConvert.SerializeObject(employee,
                 new JsonSerializerSettings
                 {

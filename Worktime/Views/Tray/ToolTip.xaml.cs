@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Worktime.DataObjetcs;
@@ -13,9 +14,23 @@ namespace Worktime.Views.Tray
         /// <summary>
         /// DependencyProperty for the progress bar color
         /// </summary>
-        public static readonly DependencyProperty EmployeeProperty = DependencyProperty.Register(
-            nameof(Employee), typeof(Employee), typeof(ToolTip),
-            new PropertyMetadata(new Employee()));
+        public static readonly DependencyProperty WorkTimeProperty = DependencyProperty.Register(
+            nameof(WorkTime), typeof(TimeSpan), typeof(ToolTip),
+            new PropertyMetadata(new TimeSpan(0)));
+
+        /// <summary>
+        /// DependencyProperty for the progress bar color
+        /// </summary>
+        public static readonly DependencyProperty EstimatedCutProperty = DependencyProperty.Register(
+            nameof(EstimatedCut), typeof(TimeSpan), typeof(ToolTip),
+            new PropertyMetadata(new TimeSpan(0)));
+
+        /// <summary>
+        /// DependencyProperty for the progress bar color
+        /// </summary>
+        public static readonly DependencyProperty OvertimeProperty = DependencyProperty.Register(
+            nameof(Overtime), typeof(TimeSpan), typeof(ToolTip),
+            new PropertyMetadata(new TimeSpan(0)));
 
         /// <summary>
         /// DependencyProperty for the progress bar color
@@ -38,12 +53,30 @@ namespace Worktime.Views.Tray
             nameof(ProgressBarValue), typeof(double), typeof(ToolTip), new PropertyMetadata(0d));
 
         /// <summary>
-        /// Value of the top label
+        /// Value of the progress bar color
         /// </summary>
-        public Employee Employee
+        public TimeSpan WorkTime
         {
-            get => (Employee)GetValue(EmployeeProperty);
-            set => SetValue(EmployeeProperty, value);
+            get => (TimeSpan)GetValue(WorkTimeProperty);
+            set => SetValue(WorkTimeProperty, value);
+        }
+
+        /// <summary>
+        /// Value of the progress bar color
+        /// </summary>
+        public TimeSpan EstimatedCut
+        {
+            get => (TimeSpan)GetValue(EstimatedCutProperty);
+            set => SetValue(EstimatedCutProperty, value);
+        }
+
+        /// <summary>
+        /// Value of the progress bar color
+        /// </summary>
+        public TimeSpan Overtime
+        {
+            get => (TimeSpan)GetValue(OvertimeProperty);
+            set => SetValue(OvertimeProperty, value);
         }
 
         /// <summary>

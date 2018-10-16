@@ -79,8 +79,8 @@ namespace Worktime.Business
             try
             {
                 using (var stream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-                using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Indent = true }))
-                    XamlWriter.Save(resourceDictionary, writer);
+                    using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Indent = true }))
+                        XamlWriter.Save(resourceDictionary, writer);
             }
             catch (Exception e)
             {
@@ -92,11 +92,11 @@ namespace Worktime.Business
 
             ThemeManager.AddAccent(WindowAccentName, resourceDictionary.Source);
 
-            var oldWindowsAccent = ThemeManager.GetAccent(WindowAccentName);
-            oldWindowsAccent.Resources.Source = resourceDictionary.Source;
+            var windowsAccent = ThemeManager.GetAccent(WindowAccentName);
+            windowsAccent.Resources.Source = resourceDictionary.Source;
 
             if (changeImmediately)
-                ThemeManager.ChangeAppStyle(Application.Current, CurrentAccent, theme ?? CurrentTheme);
+                ThemeManager.ChangeAppStyle(Application.Current, windowsAccent, theme ?? CurrentTheme);
         }
 
         private static string LoadAssemblyDirectory()

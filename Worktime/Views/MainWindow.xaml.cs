@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Shell;
 using Hardcodet.Wpf.TaskbarNotification;
@@ -10,10 +9,8 @@ using Worktime.Business;
 using Worktime.DataObjetcs;
 using Worktime.Properties;
 using Worktime.ViewModels;
-using Worktime.Views.Tray;
 using WpfUtility.Services;
 using Application = System.Windows.Application;
-using ToolTip = Worktime.Views.Tray.ToolTip;
 
 namespace Worktime.Views
 {
@@ -150,7 +147,7 @@ namespace Worktime.Views
                         ? TaskbarItemProgressState.Normal
                         : TaskbarItemProgressState.Paused;
 
-                    if (_taskbarIcon.TrayToolTip is ToolTip trayToolTip)
+                    if (_taskbarIcon.TrayToolTip is Tray.ToolTip trayToolTip)
                     {
                         trayToolTip.ProgressBarColor = running
                             ? (SolidColorBrush)Application.Current.FindResource("DayGreen")
@@ -188,9 +185,11 @@ namespace Worktime.Views
                     TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
                 }
 
-                if (_taskbarIcon.TrayToolTip is ToolTip trayToolTip)
+                if (_taskbarIcon.TrayToolTip is Tray.ToolTip trayToolTip)
                 {
-                    trayToolTip.Employee = employee;
+                    trayToolTip.WorkTime = employee.WorkTimeReal;
+                    trayToolTip.EstimatedCut = employee.EstimatedCut;
+                    trayToolTip.Overtime = employee.Overtime;
                     trayToolTip.ProgressBarValue = percent;
 
                     trayToolTip.ProgressBarColor = _endReached

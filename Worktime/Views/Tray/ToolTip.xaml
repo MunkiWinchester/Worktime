@@ -95,17 +95,17 @@
                     Grid.Row="1"
                     Grid.Column="2"
                     Style="{StaticResource ValueBlockStyle}"
-                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=Employee.WorkTimeReal, Converter={StaticResource TimeSpanConverter}}" />
+                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=WorkTime, Converter={StaticResource TimeSpanConverter}}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="2"
                     Style="{StaticResource ValueBlockStyle}"
-                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=Employee.EstimatedCut, Converter={StaticResource TimeSpanConverter}}" />
+                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=EstimatedCut, Converter={StaticResource TimeSpanConverter}}" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="2"
                     Style="{StaticResource ValueBlockStyle}"
-                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=Employee.Overtime, Converter={StaticResource TimeSpanConverter}}" />
+                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=Overtime, Converter={StaticResource TimeSpanConverter}}" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="3"
