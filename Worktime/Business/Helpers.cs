@@ -1,9 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace Worktime.Business
 {
-    internal static class Helpers
+    internal static class Helper
     {
         /// <summary>
         /// Returns the calculated percentage of the actual and the regular time
@@ -21,7 +22,10 @@ namespace Worktime.Business
             return result;
         }
 
+        public static string GetExecutingDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
         public static Version GetCurrentVersion() => Assembly.GetExecutingAssembly().GetName().Version;
+
         public static string ToVersionString(this Version version, bool includeRef = false) =>
             $"{version?.Major}.{version?.Minor}.{version?.Build}{(includeRef ? "." + version?.Revision : "")}";
     }

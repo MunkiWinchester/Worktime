@@ -5,6 +5,7 @@
     xmlns:Services="clr-namespace:WpfUtility.Services;assembly=WpfUtility"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utility="clr-namespace:Worktime.Update"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -40,6 +41,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
@@ -171,13 +173,31 @@
                     </Rectangle>
                 </MenuItem.Icon>
             </MenuItem>
-            <Separator
+            <MenuItem
                 Grid.Row="5"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=UpdateCommand}"
+                Style="{StaticResource MenuItemStyle}"
+                Visibility="{Binding Visibility, Source={x:Static utility:Updater.StatusBar}}">
+                <MenuItem.Header>
+                    <TextBlock Style="{StaticResource LabelBlockStyle}" Text="Update" />
+                </MenuItem.Header>
+                <MenuItem.Icon>
+                    <Rectangle Style="{StaticResource IconStyle}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_refresh}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator
+                Grid.Row="6"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Background="{StaticResource WindowTitleColorBrush}" />
             <MenuItem
-                Grid.Row="6"
+                Grid.Row="7"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=CloseCommand}"

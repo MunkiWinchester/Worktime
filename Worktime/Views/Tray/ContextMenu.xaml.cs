@@ -113,6 +113,8 @@ namespace Worktime.Views.Tray
             set => SetValue(StartStopCommandProperty, value);
         }
 
+        public ICommand UpdateCommand => new DelegateCommand(Update.Updater.StartUpdate);
+
         /// <summary>
         /// Value of the top label
         /// </summary>

@@ -28,7 +28,8 @@ namespace Worktime.DataObjetcs
         }
 
         [JsonConstructor]
-        public Employee(TimeSpan breakTimeRegular, IsoWeek isoWeek, ObservableCollection<Times> times, TimeSpan weekWorkTimeRegular, TimeSpan workTimeRegular)
+        public Employee(TimeSpan breakTimeRegular, IsoWeek isoWeek, ObservableCollection<Times> times,
+                        TimeSpan weekWorkTimeRegular, TimeSpan workTimeRegular)
         {
             BreakTimeRegular = breakTimeRegular;
             IsoWeek = isoWeek;

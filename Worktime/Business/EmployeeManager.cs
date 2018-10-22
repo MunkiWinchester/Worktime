@@ -22,7 +22,7 @@ namespace Worktime.Business
             {
                 DirectoryInfo dirInfo = null;
 #if DEBUG
-                dirInfo = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Data", "Test"));
+                dirInfo = new DirectoryInfo(Path.Combine(Helper.GetExecutingDirectory, "Data", "Test"));
 #else
                 var location = Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
                 location = Path.Combine(location, $".{Assembly.GetExecutingAssembly().GetName().Name}", DateTime.Now.Year.ToString());

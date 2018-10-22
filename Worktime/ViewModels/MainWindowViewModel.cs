@@ -142,6 +142,8 @@ namespace Worktime.ViewModels
         /// </summary>
         public ICommand StartStopCommand => new DelegateCommand(AddStamp);
 
+        public ICommand UpdateCommand => new DelegateCommand(Update.Updater.StartUpdate);
+
         private void EditTimeFrames(MainWindow mainWindow)
         {
             var employeeValues = EmployeeManager.GetEmployeeValuesFromJson()?.OrderByDescending(ev => ev.IsoWeek).ToList();
@@ -223,10 +225,10 @@ namespace Worktime.ViewModels
             {
                 var employee = Employee;
 
-                DayPercentageValue = Helpers.CalculatePercentage(employee.WorkTimeReal, employee.WorkTimeRegular);
-                BreakPercentageValue = Helpers.CalculatePercentage(employee.BreakTimeReal, employee.BreakTimeRegular);
+                DayPercentageValue = Helper.CalculatePercentage(employee.WorkTimeReal, employee.WorkTimeRegular);
+                BreakPercentageValue = Helper.CalculatePercentage(employee.BreakTimeReal, employee.BreakTimeRegular);
                 WeekPercentageValue =
-                    Helpers.CalculatePercentage(employee.WeekWorkTimeReal, employee.WeekWorkTimeRegular);
+                    Helper.CalculatePercentage(employee.WeekWorkTimeReal, employee.WeekWorkTimeRegular);
 
                 ProgressChanged?.Invoke(employee, DayPercentageValue);
                 RunningStateChanged?.Invoke(StopEnabled);

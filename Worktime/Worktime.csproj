@@ -234,14 +234,13 @@
     </Page>
     <Compile Include="DataObjetcs\Times.cs" />
     <Compile Include="Extension\TimeSpanExtension.cs" />
-    <Compile Include="Updater\GitHub.cs" />
-    <Compile Include="Updater\SplashScreenWindow.xaml.cs">
+    <Compile Include="Views\SplashScreenWindow.xaml.cs">
       <DependentUpon>SplashScreenWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Updater\Updating\ReleaseUrls.cs" />
-    <Compile Include="Updater\Updating\StatusBarHelper.cs" />
-    <Compile Include="Updater\Updating\Updater.cs" />
-    <Compile Include="Updater\Updating\Updater.Squirrel.cs" />
+    <Compile Include="Update\ReleaseUrls.cs" />
+    <Compile Include="Update\StatusBarHelper.cs" />
+    <Compile Include="Update\Updater.cs" />
+    <Compile Include="Update\Updater.Squirrel.cs" />
     <Compile Include="ViewModels\SettingsWindowViewModel.cs" />
     <Compile Include="Views\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
@@ -260,7 +259,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="Updater\SplashScreenWindow.xaml">
+    <Page Include="Views\SplashScreenWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

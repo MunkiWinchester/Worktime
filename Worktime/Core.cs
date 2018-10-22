@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Worktime.Business;
-// Don't remove this!
-using Worktime.Updater;
 using Worktime.Views;
 
 namespace Worktime
@@ -17,14 +15,14 @@ namespace Worktime
 #if !DEBUG
             var splashScreenWindow = new SplashScreenWindow();
             splashScreenWindow.Show();
-            var updateCheck = Updater.Updating.Updater.StartupUpdateCheck(splashScreenWindow);
+            var updateCheck = Update.Updater.StartupUpdateCheck(splashScreenWindow);
             while (!updateCheck.IsCompleted)
             {
                 await Task.Delay(TimeSpan.FromSeconds(0.5));
             }
 #endif
 
-            UiTheme.InitializeTheme();
+			UiTheme.InitializeTheme();
             MainWindow = new MainWindow();
             MainWindow.LoadConfigSettings();
             MainWindow.Show();
@@ -38,11 +36,11 @@ namespace Worktime
 
         private static async void UpdateOverlayAsync()
         {
-            Updater.Updating.Updater.CheckForUpdates(true);
+            Update.Updater.CheckForUpdates(true);
 
             while(true)
             {
-                Updater.Updating.Updater.CheckForUpdates();
+                Update.Updater.CheckForUpdates();
                 await Task.Delay(UpdateDelay);
             }
         }

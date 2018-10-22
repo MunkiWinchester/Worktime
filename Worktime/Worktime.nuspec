@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Worktime</id>
-    <version>1.0.9</version>
+    <version>1.1.0</version>
     <title>Worktime</title>
     <authors>Eike Stremlau</authors>
     <owners>Eike Stremlau</owners>

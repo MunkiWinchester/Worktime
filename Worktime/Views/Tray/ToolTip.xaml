@@ -6,6 +6,7 @@
     xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utility="clr-namespace:Worktime.Update"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="LabelBlockStyle" TargetType="{x:Type TextBlock}">
@@ -23,96 +24,112 @@
         BorderBrush="{StaticResource WindowTitleColorBrush}"
         BorderThickness="2"
         Opacity="0.825">
-        <Grid>
-            <Metro:MetroProgressBar
-                x:Name="_bar"
-                Height="Auto"
-                VerticalAlignment="Stretch"
-                Background="Transparent"
-                Maximum="100"
-                Minimum="0"
-                Opacity="0.9"
-                Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarValue}">
-                <Metro:MetroProgressBar.Resources>
-                    <Style TargetType="Metro:MetroProgressBar">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarValue, Converter={StaticResource IsEqualOrGreaterThanConverter}, ConverterParameter=100}" Value="True">
-                                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=FilledProgressBarColor}" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarValue, Converter={StaticResource IsEqualOrGreaterThanConverter}, ConverterParameter=100}" Value="False">
-                                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarColor}" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Metro:MetroProgressBar.Resources>
-            </Metro:MetroProgressBar>
-            <Grid Margin="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Image
-                    Grid.Row="1"
-                    Grid.RowSpan="3"
-                    Grid.Column="0"
-                    Height="32"
-                    Margin="5,0"
-                    RenderOptions.BitmapScalingMode="HighQuality "
-                    Source="{StaticResource WorktimeIconPng}"
-                    Stretch="UniformToFill" />
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="4"
-                    HorizontalAlignment="Center"
-                    FontSize="14"
-                    FontWeight="Bold"
-                    Text="Worktime" />
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Style="{StaticResource LabelBlockStyle}"
-                    Text="Worked:" />
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Style="{StaticResource LabelBlockStyle}"
-                    Text="Estm. cut:" />
-                <TextBlock
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    Style="{StaticResource LabelBlockStyle}"
-                    Text="Overtime:" />
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    Style="{StaticResource ValueBlockStyle}"
-                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=WorkTime, Converter={StaticResource TimeSpanConverter}}" />
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="2"
-                    Style="{StaticResource ValueBlockStyle}"
-                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=EstimatedCut, Converter={StaticResource TimeSpanConverter}}" />
-                <TextBlock
-                    Grid.Row="3"
-                    Grid.Column="2"
-                    Style="{StaticResource ValueBlockStyle}"
-                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=Overtime, Converter={StaticResource TimeSpanConverter}}" />
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="3"
-                    Margin="2,0,0,0"
-                    Style="{StaticResource ValueBlockStyle}"
-                    Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarValue, StringFormat='(\{0:0.##\}%)'}" />
+        <DockPanel>
+            <StatusBar
+                Background="{StaticResource WindowTitleColorBrush}"
+                DockPanel.Dock="Bottom"
+                Visibility="{Binding Visibility, Source={x:Static utility:Updater.StatusBar}}">
+                <StatusBarItem HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            FontWeight="SemiBold"
+                            Text="New Update Available!" />
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
+            <Grid>
+                <Metro:MetroProgressBar
+                    x:Name="_bar"
+                    Height="Auto"
+                    VerticalAlignment="Stretch"
+                    Background="Transparent"
+                    Maximum="100"
+                    Minimum="0"
+                    Opacity="0.9"
+                    Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarValue}">
+                    <Metro:MetroProgressBar.Resources>
+                        <Style TargetType="Metro:MetroProgressBar">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarValue, Converter={StaticResource IsEqualOrGreaterThanConverter}, ConverterParameter=100}" Value="True">
+                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=FilledProgressBarColor}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarValue, Converter={StaticResource IsEqualOrGreaterThanConverter}, ConverterParameter=100}" Value="False">
+                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarColor}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Metro:MetroProgressBar.Resources>
+                </Metro:MetroProgressBar>
+                <Grid Margin="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Image
+                        Grid.Row="1"
+                        Grid.RowSpan="3"
+                        Grid.Column="0"
+                        Height="32"
+                        Margin="5,0"
+                        RenderOptions.BitmapScalingMode="HighQuality "
+                        Source="{StaticResource WorktimeIconPng}"
+                        Stretch="UniformToFill" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        HorizontalAlignment="Center"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Text="Worktime" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Style="{StaticResource LabelBlockStyle}"
+                        Text="Worked:" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Style="{StaticResource LabelBlockStyle}"
+                        Text="Estm. cut:" />
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Style="{StaticResource LabelBlockStyle}"
+                        Text="Overtime:" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Style="{StaticResource ValueBlockStyle}"
+                        Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=WorkTime, Converter={StaticResource TimeSpanConverter}}" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Style="{StaticResource ValueBlockStyle}"
+                        Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=EstimatedCut, Converter={StaticResource TimeSpanConverter}}" />
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        Style="{StaticResource ValueBlockStyle}"
+                        Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=Overtime, Converter={StaticResource TimeSpanConverter}}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        Margin="2,0,0,0"
+                        Style="{StaticResource ValueBlockStyle}"
+                        Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ProgressBarValue, StringFormat='(\{0:0.##\}%)'}" />
+                </Grid>
             </Grid>
-        </Grid>
+        </DockPanel>
     </Border>
 </UserControl>
