@@ -19,19 +19,19 @@ namespace Worktime.Business
         private const string DefaultAccentName = "Crimson";
         private static Color _currentWindowsAccent = SystemParameters.WindowGlassColor;
 
-        public static AppTheme CurrentTheme => ThemeManager.AppThemes.FirstOrDefault(t => t.Name == Properties.Settings.Default.SelectedTheme) ?? ThemeManager.DetectAppStyle().Item1;
-        public static Accent CurrentAccent => ThemeManager.Accents.FirstOrDefault(a => a.Name == Properties.Settings.Default.SelectedAccent) ?? ThemeManager.GetAccent(DefaultAccentName);
+        public static AppTheme CurrentTheme => ThemeManager.AppThemes.FirstOrDefault(t => t.Name == Settings.Default.SelectedTheme) ?? ThemeManager.DetectAppStyle().Item1;
+        public static Accent CurrentAccent => ThemeManager.Accents.FirstOrDefault(a => a.Name == Settings.Default.SelectedAccent) ?? ThemeManager.GetAccent(DefaultAccentName);
 
         public static void InitializeTheme()
         {
             if (IsWindows8() || IsWindows10())
                 CreateWindowsAccentStyle();
-            else if (Properties.Settings.Default.SelectedAccent == WindowAccentName)
+            else if (Settings.Default.SelectedAccent == WindowAccentName)
             {
                 // In case if somehow user will get "Windows Accent" on Windows which not support this.
                 // (For example move whole on diffrent machine instead of fresh install)
-                Properties.Settings.Default.SelectedAccent = DefaultAccentName;
-                Properties.Settings.Default.Save();
+                Settings.Default.SelectedAccent = DefaultAccentName;
+                Settings.Save();
             }
             ThemeManager.ChangeAppStyle(Application.Current, CurrentAccent, CurrentTheme);
         }
@@ -40,7 +40,7 @@ namespace Worktime.Business
         {
             var resourceDictionary = new ResourceDictionary();
 
-            var color = SystemParameters.WindowGlassColor;
+            var color = new SolidColorBrush(AccentColorSet.ActiveSet["SystemAccent"]).Color; //SystemParameters.WindowGlassColor;
 
             resourceDictionary.Add("HighlightColor", color);
             resourceDictionary.Add("AccentColor", Color.FromArgb(204, color.R, color.G, color.B));
@@ -79,8 +79,12 @@ namespace Worktime.Business
             try
             {
                 using (var stream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
                     using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Indent = true }))
+                    {
                         XamlWriter.Save(resourceDictionary, writer);
+                    }
+                }
             }
             catch (Exception e)
             {

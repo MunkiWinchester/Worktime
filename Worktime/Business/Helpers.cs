@@ -24,6 +24,18 @@ namespace Worktime.Business
 
         public static string GetExecutingDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
+        public static string GetApplicationDataDirectory
+        {
+            get
+            {
+                var dir = $@"{Directory.GetParent(Path.GetDirectoryName(
+                            Assembly.GetExecutingAssembly().Location)).FullName}\Data";
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                return dir;
+            }
+        }
+
         public static Version GetCurrentVersion() => Assembly.GetExecutingAssembly().GetName().Version;
 
         public static string ToVersionString(this Version version, bool includeRef = false) =>

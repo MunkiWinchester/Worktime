@@ -11,6 +11,7 @@ using Worktime.Properties;
 using Worktime.ViewModels;
 using WpfUtility.Services;
 using Application = System.Windows.Application;
+using Settings = Worktime.Business.Settings;
 
 namespace Worktime.Views
 {
@@ -18,7 +19,7 @@ namespace Worktime.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : IDisposable
     {
         /// <summary>
         /// Contains the view model
@@ -49,6 +50,7 @@ namespace Worktime.Views
             DataContext = _viewModel;
             _viewModel.ProgressChanged += _viewModel_ProgressChanged;
             _viewModel.RunningStateChanged += _viewModel_RunningStateChanged;
+            Update.Updater.StatusBar.PropertyChanged += StatusBar_PropertyChanged;
 
             _taskbarIcon = (TaskbarIcon)FindResource("TaskbarIcon");
             _taskbarIcon.DoubleClickCommand = new DelegateCommand(() => NotifyIconOnClick(false));
@@ -68,7 +70,7 @@ namespace Worktime.Views
             Settings.Default.SelectedTheme = string.IsNullOrWhiteSpace(Settings.Default.SelectedTheme)
                 ? "BaseDark"
                 : Settings.Default.SelectedTheme;
-            Settings.Default.Save();
+            Settings.Save();
 
             try
             {
@@ -84,6 +86,13 @@ namespace Worktime.Views
             }
 
             _viewModel.InitControl();
+        }
+
+        private void StatusBar_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(sender is Update.StatusBarHelper statusBar && statusBar.Visibility == Visibility.Visible)
+                _taskbarIcon.ShowBalloonTip("New Update Available!", $@"There is a new update available.{
+                    Environment.NewLine}Please restart the application.", BalloonIcon.None);
         }
 
         /// <summary>
@@ -134,7 +143,7 @@ namespace Worktime.Views
         /// Occurs when the running state was changed
         /// </summary>
         /// <param name="running">The running state</param>
-        private void _viewModel_RunningStateChanged(bool running)
+        private void _viewModel_RunningStateChanged(object sender, RunningStateEventArgs eventArgs)
         {
             Application.Current?.Dispatcher.Invoke(() =>
             {
@@ -143,20 +152,20 @@ namespace Worktime.Views
 
                 if (!_endReached)
                 {
-                    TaskbarItemInfo.ProgressState = running
+                    TaskbarItemInfo.ProgressState = eventArgs.IsRunning
                         ? TaskbarItemProgressState.Normal
                         : TaskbarItemProgressState.Paused;
 
                     if (_taskbarIcon.TrayToolTip is Tray.ToolTip trayToolTip)
                     {
-                        trayToolTip.ProgressBarColor = running
+                        trayToolTip.ProgressBarColor = eventArgs.IsRunning
                             ? (SolidColorBrush)Application.Current.FindResource("DayGreen")
                             : (SolidColorBrush)Application.Current.FindResource("PauseYellow");
                     }
                 }
 
                 if (_taskbarIcon.TrayPopup is Tray.ContextMenu contextMenu)
-                    contextMenu.IsRunning = running;
+                    contextMenu.IsRunning = eventArgs.IsRunning;
             });
         }
 
@@ -165,15 +174,15 @@ namespace Worktime.Views
         /// </summary>
         /// <param name="percent">The percent value</param>
         /// <param name="notifyIconText"></param>
-        private void _viewModel_ProgressChanged(Employee employee, double percent)
+        private void _viewModel_ProgressChanged(object sender, ProgressEventArgs eventArgs)
         {
             Application.Current?.Dispatcher.Invoke(() =>
             {
                 if (TaskbarItemInfo == null)
                     return;
 
-                var value = Math.Round(percent / 100, 2);
-                if (percent >= 100)
+                var value = Math.Round(eventArgs.Percent / 100, 2);
+                if (eventArgs.Percent >= 100)
                 {
                     _endReached = true;
                     TaskbarItemInfo.ProgressValue = 1.0;
@@ -187,10 +196,10 @@ namespace Worktime.Views
 
                 if (_taskbarIcon.TrayToolTip is Tray.ToolTip trayToolTip)
                 {
-                    trayToolTip.WorkTime = employee.WorkTimeReal;
-                    trayToolTip.EstimatedCut = employee.EstimatedCut;
-                    trayToolTip.Overtime = employee.Overtime;
-                    trayToolTip.ProgressBarValue = percent;
+                    trayToolTip.WorkTime = eventArgs.Employee.WorkTimeReal;
+                    trayToolTip.EstimatedCut = eventArgs.Employee.EstimatedCut;
+                    trayToolTip.Overtime = eventArgs.Employee.Overtime;
+                    trayToolTip.ProgressBarValue = eventArgs.Percent;
 
                     trayToolTip.ProgressBarColor = _endReached
                         ? (SolidColorBrush)Application.Current.FindResource("DayRed")
@@ -208,13 +217,24 @@ namespace Worktime.Views
         {
             Settings.Default.Top = Top;
             Settings.Default.Left = Left;
-            Settings.Default.Save();
+            Settings.Save();
         }
 
         private void MainWindow_OnDeactivated(object sender, EventArgs e)
         {
             var window = (Window) sender;
             window.Topmost = Settings.Default.IsAlwaysOnTop;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            _viewModel.Dispose();
         }
     }
 }

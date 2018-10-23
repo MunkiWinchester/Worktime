@@ -7,10 +7,12 @@ namespace Worktime
 {
     public static class Core
     {
-        private static int UpdateDelay => (int) TimeSpan.FromMinutes(10).TotalMilliseconds;
+        private static int UpdateDelay => (int) TimeSpan.FromMinutes(30).TotalMilliseconds;
         public static MainWindow MainWindow { get; set; }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public static async void Initialize()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
 #if !DEBUG
             var splashScreenWindow = new SplashScreenWindow();
@@ -22,7 +24,7 @@ namespace Worktime
             }
 #endif
 
-			UiTheme.InitializeTheme();
+            UiTheme.InitializeTheme();
             MainWindow = new MainWindow();
             MainWindow.LoadConfigSettings();
             MainWindow.Show();

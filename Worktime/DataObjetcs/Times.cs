@@ -10,7 +10,7 @@ namespace Worktime.DataObjetcs
 {
     public class Times : ObservableObject
     {
-        public event EventHandler<string> OnChange;
+        public event EventHandler<OnChangeEventArgs> OnChange;
         private ObservableCollection<TimeFrame> _timeFrames;
         private DateTime _date;
         private readonly bool _isInitial = true;
@@ -37,7 +37,7 @@ namespace Worktime.DataObjetcs
                 if (SetField(ref _timeFrames, value))
                 {
                     if (!_isInitial)
-                        OnChange?.Invoke(this, nameof(TimeFrames));
+                        OnChange?.Invoke(this, new OnChangeEventArgs(nameof(TimeFrames)));
                     TriggerPropertiesOnChanged();
 
                     foreach (var timeFrame in _timeFrames)
@@ -58,11 +58,11 @@ namespace Worktime.DataObjetcs
             OnPropertyChanged(nameof(BreakDifference));
         }
 
-        private void ValueChanged(object sender, string e)
+        private void ValueChanged(object sender, OnChangeEventArgs e)
         {
             if (!_isInitial)
             {
-                OnChange?.Invoke(this, nameof(TimeFrame));
+                OnChange?.Invoke(this, new OnChangeEventArgs(nameof(TimeFrame)));
                 TriggerPropertiesOnChanged();
             }
         }
@@ -73,7 +73,7 @@ namespace Worktime.DataObjetcs
             set
             {
                 if (SetField(ref _date, value) && !_isInitial)
-                    OnChange?.Invoke(this, nameof(Date));
+                    OnChange?.Invoke(this, new OnChangeEventArgs(nameof(Date)));
             }
         }
 

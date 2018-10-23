@@ -12,7 +12,7 @@ namespace Worktime.Update
     internal static partial class Updater
     {
         private static ReleaseUrls _releaseUrls;
-        private static TimeSpan _updateCheckDelay = new TimeSpan(0, 20, 0);
+        private static TimeSpan _updateCheckDelay = new TimeSpan(0, 25, 0);
         private static bool ShouldCheckForUpdates()
             => DateTime.Now - _lastUpdateCheck >= _updateCheckDelay;
 
@@ -24,14 +24,13 @@ namespace Worktime.Update
             try
             {
                 bool updated;
-                using(var mgr = await GetUpdateManager())
+                using (var mgr = await GetUpdateManager())
+                {
                     updated = await SquirrelUpdate(mgr, null);
+                }
 
                 if(updated)
-                {
-                    _updateCheckDelay = new TimeSpan(1, 0, 0);
                     StatusBar.Visibility = Visibility.Visible;
-                }
             }
             catch(Exception e)
             {

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PublicHoliday;
@@ -22,10 +21,11 @@ namespace Worktime.Business
             {
                 DirectoryInfo dirInfo = null;
 #if DEBUG
-                dirInfo = new DirectoryInfo(Path.Combine(Helper.GetExecutingDirectory, "Data", "Test"));
+                dirInfo = new DirectoryInfo(Path.Combine(Helper.GetApplicationDataDirectory, "Test"));
 #else
                 var location = Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-                location = Path.Combine(location, $".{Assembly.GetExecutingAssembly().GetName().Name}", DateTime.Now.Year.ToString());
+                location = Path.Combine(location, $".{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}",
+                                        DateTime.Now.Year.ToString());
                 if (!Directory.Exists(location))
                     Directory.CreateDirectory(location);
                 dirInfo = new DirectoryInfo(location);
@@ -164,7 +164,8 @@ namespace Worktime.Business
                 }
         }
 
-        public static (bool currentHasChanged, Employee currentEmployee) SaveEmployeeValues(List<Employee> employeeValues, IsoWeek currentIsoWeek)
+        public static (bool currentHasChanged, Employee currentEmployee) SaveEmployeeValues
+            (List<Employee> employeeValues, IsoWeek currentIsoWeek)
         {
             var changedEvs = employeeValues.Where(ev => ev.HasChanges).ToList();
             var currentHasChanged = false;

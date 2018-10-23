@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using NLog;
+using NLog.Targets;
 
 namespace Worktime.Business
 {
@@ -84,7 +86,8 @@ namespace Worktime.Business
             var logger = LogManager.GetLogger(callerPath);
 
             // quit processing any further if not enabled for the requested logging level
-            if (!logger.IsEnabled(level)) return;
+            if (!logger.IsEnabled(level))
+                return;
 
             // log the event with caller information bound to it
             var logEvent = new LogEventInfo(level, callerPath, message) {Exception = exception};
@@ -94,6 +97,16 @@ namespace Worktime.Business
             logEvent.Properties.Add("system", System);
             logEvent.Properties.Add("startDateTime", StartDateTime.ToString("yyyy-MM-dd.HH-mm-ss"));
             logger.Log(logEvent);
+        }
+
+        public static void ReconfigFileTarget()
+        {
+            var target = (FileTarget) LogManager.Configuration.FindTargetByName("file");
+            target.FileName =
+                Path.Combine(Helper.GetApplicationDataDirectory, "Logs", target.FileName.ToString().Replace("\'", ""));
+            target.ArchiveFileName =
+                Path.Combine(Helper.GetApplicationDataDirectory, "Logs", "Archive", target.FileName.ToString().Replace("\'", ""));
+            LogManager.ReconfigExistingLoggers();
         }
     }
 }

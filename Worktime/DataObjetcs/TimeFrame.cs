@@ -7,7 +7,7 @@ namespace Worktime.DataObjetcs
 {
     public class TimeFrame : ObservableObject
     {
-        public event EventHandler<string> OnChange;
+        public event EventHandler<OnChangeEventArgs> OnChange;
         private TimeSpan _begin;
         private TimeSpan? _end;
         private bool _isCurrent;
@@ -25,7 +25,7 @@ namespace Worktime.DataObjetcs
             set
             {
                 if (SetField(ref _isCurrent, value) && !_isInitial)
-                    OnChange?.Invoke(this, nameof(IsCurrent));
+                    OnChange?.Invoke(this, new OnChangeEventArgs(nameof(IsCurrent)));
             }
         }
 
@@ -37,7 +37,7 @@ namespace Worktime.DataObjetcs
                 if (SetField(ref _begin, new TimeSpan(value.Hours, value.Minutes, value.Seconds)))
                 {
                     if(!_isInitial)
-                        OnChange?.Invoke(this, nameof(Begin));
+                        OnChange?.Invoke(this, new OnChangeEventArgs(nameof(Begin)));
                     OnPropertyChanged(nameof(Span));
                 }
             }
@@ -56,7 +56,7 @@ namespace Worktime.DataObjetcs
                 if (SetField(ref _end, end))
                 {
                     if (!_isInitial)
-                        OnChange?.Invoke(this, nameof(End));
+                        OnChange?.Invoke(this, new OnChangeEventArgs(nameof(End)));
                     OnPropertyChanged(nameof(Span));
                 }
             }

@@ -9,21 +9,8 @@ using WpfUtility.Services;
 
 namespace Worktime.ViewModels
 {
-    public class MainWindowViewModel : ObservableObject
+    public class MainWindowViewModel : ObservableObject, IDisposable
     {
-        // Events
-        /// <summary>
-        /// The delegate for the progress changed event
-        /// </summary>
-        /// <param name="percent">The percent value</param>
-        public delegate void ProgressEvent(Employee employee, double percent);
-
-        /// <summary>
-        /// The delegate for the running state event
-        /// </summary>
-        /// <param name="running">true if the timer is running, otherwise false</param>
-        public delegate void RunningStateEvent(bool running);
-
         private readonly Timer _timer30Sec;
         private double _breakPercentageValue;
         private double _dayPercentageValue;
@@ -165,7 +152,7 @@ namespace Worktime.ViewModels
             EmployeeManager.AddStamp(Employee);
             StartEnabled = StopEnabled;
             StopEnabled = !StopEnabled;
-            RunningStateChanged?.Invoke(StopEnabled);
+            RunningStateChanged?.Invoke(this, new RunningStateEventArgs(StopEnabled));
         }
 
         /// <summary>
@@ -181,12 +168,12 @@ namespace Worktime.ViewModels
         /// <summary>
         /// Occurs when the progress of the progress bar changed
         /// </summary>
-        public event ProgressEvent ProgressChanged;
+        public event EventHandler<ProgressEventArgs> ProgressChanged;
 
         /// <summary>
         /// Occurs when the running state is changed
         /// </summary>
-        public event RunningStateEvent RunningStateChanged;
+        public event EventHandler<RunningStateEventArgs> RunningStateChanged;
 
         /// <summary>
         /// Inits the window
@@ -230,8 +217,8 @@ namespace Worktime.ViewModels
                 WeekPercentageValue =
                     Helper.CalculatePercentage(employee.WeekWorkTimeReal, employee.WeekWorkTimeRegular);
 
-                ProgressChanged?.Invoke(employee, DayPercentageValue);
-                RunningStateChanged?.Invoke(StopEnabled);
+                ProgressChanged?.Invoke(this, new ProgressEventArgs(employee, DayPercentageValue));
+                RunningStateChanged?.Invoke(this, new RunningStateEventArgs(StopEnabled));
 
                 Employee = employee;
             }
@@ -255,6 +242,17 @@ namespace Worktime.ViewModels
         {
             var about = new AboutWindow(mainWindow);
             about.ShowDialog();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            _timer30Sec.Dispose();
         }
     }
 }

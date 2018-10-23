@@ -6,7 +6,7 @@ using System.Windows.Input;
 using MahApps.Metro;
 using PublicHoliday;
 using Worktime.Business;
-using Worktime.Properties;
+using Worktime.DataObjects;
 using WpfUtility.Services;
 
 namespace Worktime.ViewModels
@@ -184,7 +184,7 @@ namespace Worktime.ViewModels
             Settings.Default.SelectedTheme = SelectedTheme;
             Settings.Default.IsAlwaysOnTop = IsAlwaysOnTop;
             Settings.Default.SelectedState = SelectedState.ToString();
-            Settings.Default.Save();
+            Settings.Save();
         }
     }
 }

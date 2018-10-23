@@ -66,15 +66,15 @@ namespace Worktime.DataObjetcs
 
                     foreach (var time in _times)
                     {
-                        time.OnChange +=ValueChanged;
+                        time.OnChange += ValueChanged;
                     }
                 }
             }
         }
 
-        private void ValueChanged(object sender, string e)
+        private void ValueChanged(object sender, OnChangeEventArgs e)
         {
-            ChangeHasChanges(sender, e);
+            ChangeHasChanges(sender, e.PropertyName);
         }
 
         public TimeSpan WorkTimeRegular
