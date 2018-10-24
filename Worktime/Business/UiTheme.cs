@@ -17,7 +17,6 @@ namespace Worktime.Business
     {
         public const string WindowAccentName = "Windows Accent";
         private const string DefaultAccentName = "Crimson";
-        private static Color _currentWindowsAccent = SystemParameters.WindowGlassColor;
 
         public static AppTheme CurrentTheme => ThemeManager.AppThemes.FirstOrDefault(t => t.Name == Settings.Default.SelectedTheme) ?? ThemeManager.DetectAppStyle().Item1;
         public static Accent CurrentAccent => ThemeManager.Accents.FirstOrDefault(a => a.Name == Settings.Default.SelectedAccent) ?? ThemeManager.GetAccent(DefaultAccentName);

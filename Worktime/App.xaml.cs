@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using MahApps.Metro;
+using Microsoft.Win32;
 using Worktime.Business;
 
 namespace Worktime
@@ -13,7 +14,6 @@ namespace Worktime
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-
             Logger.ReconfigFileTarget();
 
             // track possible exceptions
@@ -22,6 +22,7 @@ namespace Worktime
             Dispatcher.UnhandledException += Dispatcher_UnhandledException;
             Current.DispatcherUnhandledException += Dispatcher_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 
             // add custom accent and theme resource dictionaries to the ThemeManager
             ThemeManager.AddAccent("Spotify",
@@ -47,10 +48,33 @@ namespace Worktime
             Logger.Error(args.Exception.Message, args.Exception);
         }
 
-        public static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception) args.ExceptionObject;
             Logger.Error(e.Message, e);
+        }
+
+        private bool ShouldUpdateTheme()
+            => DateTime.Now - _lastUpdate >= _updateDelay;
+        private TimeSpan _updateDelay = new TimeSpan(0, 0, 30);
+        private DateTime _lastUpdate = DateTime.MinValue;
+
+        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            if ((e.Category == UserPreferenceCategory.Color
+                || e.Category == UserPreferenceCategory.General)
+                && UiTheme.CurrentAccent.Name == UiTheme.WindowAccentName
+                && ShouldUpdateTheme())
+            {
+                UiTheme.CreateWindowsAccentStyle(true);
+                _lastUpdate = DateTime.Now;
+            }
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            // Because this is a static event, detach event handler when application is closed, or memory leaks will result.
+            SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
         }
     }
 }

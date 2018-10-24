@@ -110,21 +110,21 @@ namespace Worktime.Update
                 }
                 if(IsRevisionIncrement(current?.Version, latest?.Version))
                 {
-                    Logger.Info($"Newest version ({latest}) is revision increment. Updating in background.");
+                    Logger.Info($"Newest version ({latest}) is greater or equal ({current}). Updating in background.");
                 }
                 if(splashScreenWindow != null)
                     await mgr.DownloadReleases(updateInfo.ReleasesToApply, splashScreenWindow.Updating);
                 else
                     await mgr.DownloadReleases(updateInfo.ReleasesToApply);
                 splashScreenWindow?.Updating(100);
-                Logger.Info("Applying releases");
+                Logger.Info($"Applying release ({latest})");
                 if(splashScreenWindow != null)
                     await mgr.ApplyReleases(updateInfo, splashScreenWindow.Installing);
                 else
                     await mgr.ApplyReleases(updateInfo);
                 splashScreenWindow?.Installing(100);
                 await mgr.CreateUninstallerRegistryEntry();
-                Logger.Info("Done");
+                Logger.Info("Applying done");
                 return true;
             }
             catch(Exception e)
@@ -143,8 +143,9 @@ namespace Worktime.Update
         {
             if(current == null || latest == null)
                 return false;
-            return current.Major == latest.Major && current.Minor == latest.Minor && current.Build == latest.Build
-                    && current.Revision < latest.Revision;
+            return  current.Major == latest.Major &&
+                    current.Minor == latest.Minor &&
+                    current.Build <  latest.Build;
         }
 
         internal static void StartUpdate()

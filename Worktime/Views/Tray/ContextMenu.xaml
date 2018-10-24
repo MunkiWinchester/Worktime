@@ -186,7 +186,7 @@
                 <MenuItem.Icon>
                     <Rectangle Style="{StaticResource IconStyle}">
                         <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_refresh}" />
+                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_download}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                 </MenuItem.Icon>

@@ -7,7 +7,6 @@ using Hardcodet.Wpf.TaskbarNotification;
 using MahApps.Metro;
 using Worktime.Business;
 using Worktime.DataObjetcs;
-using Worktime.Properties;
 using Worktime.ViewModels;
 using WpfUtility.Services;
 using Application = System.Windows.Application;
