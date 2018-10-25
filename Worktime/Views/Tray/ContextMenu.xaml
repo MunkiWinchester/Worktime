@@ -32,7 +32,7 @@
     </UserControl.Resources>
     <Border
         Background="{StaticResource ControlBackgroundBrush}"
-        BorderBrush="{StaticResource WindowTitleColorBrush}"
+        BorderBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=AccentColor}"
         BorderThickness="2"
         Opacity="0.825">
         <Grid>
@@ -195,7 +195,7 @@
                 Grid.Row="6"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Background="{StaticResource WindowTitleColorBrush}" />
+                Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=AccentColor}" />
             <MenuItem
                 Grid.Row="7"
                 Grid.Column="0"

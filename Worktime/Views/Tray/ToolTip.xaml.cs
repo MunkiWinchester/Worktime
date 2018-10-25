@@ -53,6 +53,22 @@ namespace Worktime.Views.Tray
             nameof(ProgressBarValue), typeof(double), typeof(ToolTip), new PropertyMetadata(0d));
 
         /// <summary>
+        /// DependencyProperty for the progress bar color
+        /// </summary>
+        public static readonly DependencyProperty AccentColorProperty = DependencyProperty.Register(
+            nameof(AccentColor), typeof(SolidColorBrush), typeof(ToolTip),
+            new PropertyMetadata(new SolidColorBrush(Colors.DarkRed)));
+
+        /// <summary>
+        /// Value of the progress bar color
+        /// </summary>
+        public SolidColorBrush AccentColor
+        {
+            get => (SolidColorBrush)GetValue(AccentColorProperty);
+            set => SetValue(AccentColorProperty, value);
+        }
+
+        /// <summary>
         /// Value of the progress bar color
         /// </summary>
         public TimeSpan WorkTime

@@ -8,34 +8,39 @@ using System.Xml;
 using MahApps.Metro;
 using Point = System.Windows.Point;
 using Application = System.Windows.Application;
-using Microsoft.Win32;
-using System.Reflection;
+using Worktime.DataObjetcs;
 
 namespace Worktime.Business
 {
-    public static class UiTheme
+    public static class UiStyleManager
     {
-        public const string WindowAccentName = "Windows Accent";
+        public const string WindowsAccentName = "Windows Accent";
         private const string DefaultAccentName = "Crimson";
 
-        public static AppTheme CurrentTheme => ThemeManager.AppThemes.FirstOrDefault(t => t.Name == Settings.Default.SelectedTheme) ?? ThemeManager.DetectAppStyle().Item1;
-        public static Accent CurrentAccent => ThemeManager.Accents.FirstOrDefault(a => a.Name == Settings.Default.SelectedAccent) ?? ThemeManager.GetAccent(DefaultAccentName);
+        public static event EventHandler<StyleChangeEventArgs> IsStyleChanged;
+
+        public static AppTheme CurrentTheme =>
+                ThemeManager.AppThemes.FirstOrDefault(t => t.Name == Settings.Default.SelectedTheme)
+                ?? ThemeManager.DetectAppStyle().Item1;
+        public static Accent CurrentAccent =>
+                ThemeManager.Accents.FirstOrDefault(a => a.Name == Settings.Default.SelectedAccent)
+                ?? ThemeManager.GetAccent(DefaultAccentName);
 
         public static void InitializeTheme()
         {
-            if (IsWindows8() || IsWindows10())
+            if (Helper.IsWindows8() || Helper.IsWindows10())
                 CreateWindowsAccentStyle();
-            else if (Settings.Default.SelectedAccent == WindowAccentName)
+            else if (Settings.Default.SelectedAccent == WindowsAccentName)
             {
                 // In case if somehow user will get "Windows Accent" on Windows which not support this.
                 // (For example move whole on diffrent machine instead of fresh install)
                 Settings.Default.SelectedAccent = DefaultAccentName;
                 Settings.Save();
             }
-            ThemeManager.ChangeAppStyle(Application.Current, CurrentAccent, CurrentTheme);
+            ChangeAppStyle(CurrentAccent, CurrentTheme);
         }
 
-        public static void CreateWindowsAccentStyle(bool changeImmediately = false, AppTheme theme = null)
+        public static void CreateWindowsAccentStyle(bool changeImmediately = false, string themeName = null)
         {
             var resourceDictionary = new ResourceDictionary();
 
@@ -73,7 +78,7 @@ namespace Worktime.Business
             resourceDictionary.Add("MetroDataGrid.InactiveSelectionHighlightBrush", new SolidColorBrush((Color)resourceDictionary["AccentColor2"]));
             resourceDictionary.Add("MetroDataGrid.InactiveSelectionHighlightTextBrush", new SolidColorBrush((Color)resourceDictionary["IdealForegroundColor"]));
 
-            var fileName = Path.Combine(LoadAssemblyDirectory(), "WindowsAccent.xaml");
+            var fileName = Path.Combine(Helper.LoadAssemblyDirectory(), "WindowsAccent.xaml");
 
             try
             {
@@ -93,49 +98,32 @@ namespace Worktime.Business
 
             resourceDictionary = new ResourceDictionary { Source = new Uri(Path.GetFullPath(fileName), UriKind.Absolute) };
 
-            ThemeManager.AddAccent(WindowAccentName, resourceDictionary.Source);
+            ThemeManager.AddAccent(WindowsAccentName, resourceDictionary.Source);
 
-            var windowsAccent = ThemeManager.GetAccent(WindowAccentName);
+            var windowsAccent = ThemeManager.GetAccent(WindowsAccentName);
             windowsAccent.Resources.Source = resourceDictionary.Source;
 
+            var theme = CurrentTheme;
+            if (!string.IsNullOrWhiteSpace(themeName))
+            {
+                var themeLoaded = ThemeManager.GetAppTheme(themeName);
+                if(themeLoaded != null)
+                    theme = themeLoaded;
+            }
+                
             if (changeImmediately)
-                ThemeManager.ChangeAppStyle(Application.Current, windowsAccent, theme ?? CurrentTheme);
+                ChangeAppStyle(windowsAccent, theme);
         }
 
-        private static string LoadAssemblyDirectory()
+        public static void ChangeAppStyle(Accent accent, AppTheme theme)
         {
-            var codeBase = Assembly.GetExecutingAssembly().CodeBase;
-            var uri = new UriBuilder(codeBase);
-            var path = Uri.UnescapeDataString(uri.Path);
-            return Path.GetDirectoryName(path);
+            ThemeManager.ChangeAppStyle(Application.Current, accent, theme);
+            IsStyleChanged?.Invoke(typeof(UiStyleManager), new StyleChangeEventArgs(accent, theme));
         }
 
-        public static bool IsWindows10()
+        public static void ChangeAppStyle(string accent, string theme)
         {
-            try
-            {
-                var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-                return reg != null && ((string)reg.GetValue("ProductName")).Contains("Windows 10");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("IsWindows10()", ex);
-                return false;
-            }
-        }
-
-        public static bool IsWindows8()
-        {
-            try
-            {
-                var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-                return reg != null && ((string)reg.GetValue("ProductName")).Contains("Windows 8");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("IsWindows8()", ex);
-                return false;
-            }
+            ChangeAppStyle(ThemeManager.GetAccent(accent), ThemeManager.GetAppTheme(theme));
         }
     }
 }

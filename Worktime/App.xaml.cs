@@ -63,10 +63,10 @@ namespace Worktime
         {
             if ((e.Category == UserPreferenceCategory.Color
                 || e.Category == UserPreferenceCategory.General)
-                && UiTheme.CurrentAccent.Name == UiTheme.WindowAccentName
+                && UiStyleManager.CurrentAccent.Name == UiStyleManager.WindowsAccentName
                 && ShouldUpdateTheme())
             {
-                UiTheme.CreateWindowsAccentStyle(true);
+                UiStyleManager.CreateWindowsAccentStyle(true);
                 _lastUpdate = DateTime.Now;
             }
         }

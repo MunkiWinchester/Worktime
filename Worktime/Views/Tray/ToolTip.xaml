@@ -21,12 +21,12 @@
     </UserControl.Resources>
     <Border
         Background="{StaticResource ControlBackgroundBrush}"
-        BorderBrush="{StaticResource WindowTitleColorBrush}"
+        BorderBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=AccentColor}"
         BorderThickness="2"
         Opacity="0.825">
         <DockPanel>
             <StatusBar
-                Background="{StaticResource WindowTitleColorBrush}"
+                Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=AccentColor}"
                 DockPanel.Dock="Bottom"
                 Visibility="{Binding Visibility, Source={x:Static utility:Updater.StatusBar}}">
                 <StatusBarItem HorizontalAlignment="Center">

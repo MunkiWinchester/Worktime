@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shell;
 using Hardcodet.Wpf.TaskbarNotification;
@@ -39,6 +40,10 @@ namespace Worktime.Views
         public MainWindow()
         {
             InitializeComponent();
+
+            _taskbarIcon = (TaskbarIcon)FindResource("TaskbarIcon");
+            _taskbarIcon.TrayPopup = new Tray.ContextMenu();
+            _taskbarIcon.TrayToolTip = new Tray.ToolTip();
         }
 
         internal void LoadConfigSettings()
@@ -50,8 +55,8 @@ namespace Worktime.Views
             _viewModel.ProgressChanged += _viewModel_ProgressChanged;
             _viewModel.RunningStateChanged += _viewModel_RunningStateChanged;
             Update.Updater.StatusBar.PropertyChanged += StatusBar_PropertyChanged;
+            UiStyleManager.IsStyleChanged += UiStyleManager_IsStyleChanged;
 
-            _taskbarIcon = (TaskbarIcon)FindResource("TaskbarIcon");
             _taskbarIcon.DoubleClickCommand = new DelegateCommand(() => NotifyIconOnClick(false));
             if (_taskbarIcon.TrayPopup is Tray.ContextMenu contextMenu)
             {
@@ -73,18 +78,24 @@ namespace Worktime.Views
 
             try
             {
-                ThemeManager.ChangeAppStyle(Application.Current,
-                    ThemeManager.GetAccent(Settings.Default.SelectedAccent),
-                    ThemeManager.GetAppTheme(Settings.Default.SelectedTheme));
+                UiStyleManager.ChangeAppStyle(Settings.Default.SelectedAccent, Settings.Default.SelectedTheme);
             }
             catch (Exception exception)
             {
                 Logger.Error("LoadConfigSettings()", exception);
-                ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent("Crimson"),
-                    ThemeManager.GetAppTheme("BaseDark"));
+                UiStyleManager.ChangeAppStyle("Crimson", "BaseDark");
             }
 
             _viewModel.InitControl();
+        }
+
+        private void UiStyleManager_IsStyleChanged(object sender, StyleChangeEventArgs e)
+        {
+            var accentColor = e.Accent.Resources["AccentColorBrush"] as SolidColorBrush;
+            if (_taskbarIcon.TrayToolTip is Tray.ToolTip toolTip)
+                toolTip.AccentColor = accentColor;
+            if (_taskbarIcon.TrayPopup is Tray.ContextMenu contextMenu)
+                contextMenu.AccentColor = accentColor;
         }
 
         private void StatusBar_PropertyChanged(object sender, PropertyChangedEventArgs e)

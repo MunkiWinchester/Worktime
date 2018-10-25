@@ -33,4 +33,16 @@ namespace Worktime.DataObjetcs
             IsRunning = isRunning;
         }
     }
+
+    public class StyleChangeEventArgs : EventArgs
+    {
+        public MahApps.Metro.Accent Accent { get; set; }
+        public MahApps.Metro.AppTheme Theme { get; set; }
+
+        public StyleChangeEventArgs(MahApps.Metro.Accent accent, MahApps.Metro.AppTheme theme)
+        {
+            Accent = accent;
+            Theme = theme;
+        }
+    }
 }

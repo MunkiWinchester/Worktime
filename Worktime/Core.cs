@@ -24,7 +24,7 @@ namespace Worktime
             }
 #endif
 
-            UiTheme.InitializeTheme();
+            UiStyleManager.InitializeTheme();
             MainWindow = new MainWindow();
             MainWindow.LoadConfigSettings();
             MainWindow.Show();

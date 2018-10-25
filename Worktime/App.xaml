@@ -52,14 +52,7 @@
             <tb:TaskbarIcon
                 x:Key="TaskbarIcon"
                 IconSource="/Resources/Images/Utilities-clock.ico"
-                PopupActivation="RightClick">
-                <tb:TaskbarIcon.TrayToolTip>
-                    <tray:ToolTip />
-                </tb:TaskbarIcon.TrayToolTip>
-                <tb:TaskbarIcon.TrayPopup>
-                    <tray:ContextMenu />
-                </tb:TaskbarIcon.TrayPopup>
-            </tb:TaskbarIcon>
+                PopupActivation="RightClick" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

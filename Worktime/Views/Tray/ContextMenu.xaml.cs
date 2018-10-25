@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WpfUtility.Services;
 
 namespace Worktime.Views.Tray
@@ -58,6 +59,22 @@ namespace Worktime.Views.Tray
         public static readonly DependencyProperty IsMinimizedProperty = DependencyProperty.Register(
             nameof(IsMinimized), typeof(bool), typeof(ContextMenu),
             new PropertyMetadata(false));
+
+        /// <summary>
+        /// DependencyProperty for the progress bar color
+        /// </summary>
+        public static readonly DependencyProperty AccentColorProperty = DependencyProperty.Register(
+            nameof(AccentColor), typeof(SolidColorBrush), typeof(ContextMenu),
+            new PropertyMetadata(new SolidColorBrush(Colors.DarkRed)));
+
+        /// <summary>
+        /// Value of the progress bar color
+        /// </summary>
+        public SolidColorBrush AccentColor
+        {
+            get => (SolidColorBrush)GetValue(AccentColorProperty);
+            set => SetValue(AccentColorProperty, value);
+        }
 
         /// <summary>
         /// Value of the top label

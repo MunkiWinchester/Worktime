@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.Win32;
 
 namespace Worktime.Business
 {
@@ -40,5 +41,41 @@ namespace Worktime.Business
 
         public static string ToVersionString(this Version version, bool includeRef = false) =>
             $"{version?.Major}.{version?.Minor}.{version?.Build}{(includeRef ? "." + version?.Revision : "")}";
+
+        public static bool IsWindows10()
+        {
+            try
+            {
+                var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                return reg != null && ((string)reg.GetValue("ProductName")).Contains("Windows 10");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("IsWindows10()", ex);
+                return false;
+            }
+        }
+
+        public static bool IsWindows8()
+        {
+            try
+            {
+                var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                return reg != null && ((string)reg.GetValue("ProductName")).Contains("Windows 8");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("IsWindows8()", ex);
+                return false;
+            }
+        }
+
+        public static string LoadAssemblyDirectory()
+        {
+            var codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            var uri = new UriBuilder(codeBase);
+            var path = Uri.UnescapeDataString(uri.Path);
+            return Path.GetDirectoryName(path);
+        }
     }
 }

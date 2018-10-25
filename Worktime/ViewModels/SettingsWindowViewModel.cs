@@ -156,12 +156,10 @@ namespace Worktime.ViewModels
         {
             if (!_initial)
             {
-                if (SelectedAccent == UiTheme.WindowAccentName)
-                    UiTheme.CreateWindowsAccentStyle(true, ThemeManager.GetAppTheme(_selectedTheme));
+                if (SelectedAccent == UiStyleManager.WindowsAccentName)
+                    UiStyleManager.CreateWindowsAccentStyle(true, _selectedTheme);
                 else
-                    ThemeManager.ChangeAppStyle(Application.Current,
-                        ThemeManager.GetAccent(_selectedAccent),
-                        ThemeManager.GetAppTheme(_selectedTheme));
+                    UiStyleManager.ChangeAppStyle(_selectedAccent, _selectedTheme);
             }
         }
 
@@ -170,9 +168,7 @@ namespace Worktime.ViewModels
         /// </summary>
         private static void ResetSettings()
         {
-            ThemeManager.ChangeAppStyle(Application.Current,
-                ThemeManager.GetAccent(Settings.Default.SelectedAccent),
-                ThemeManager.GetAppTheme(Settings.Default.SelectedTheme));
+            UiStyleManager.ChangeAppStyle(Settings.Default.SelectedAccent, Settings.Default.SelectedTheme);
         }
 
         /// <summary>
