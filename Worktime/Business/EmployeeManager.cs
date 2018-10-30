@@ -119,8 +119,7 @@ namespace Worktime.Business
             employee.WeekWorkTimeRegular =
                 TimeSpan.FromMilliseconds((5 - CalculateHolidays()) * employee.WorkTimeRegular.TotalMilliseconds);
 
-            employee.BreakTimeRegular = new TimeSpan(0,
-                Convert.ToInt32(Math.Floor(employee.WorkTimeRegular.TotalHours / 3) * 15), 0);
+            employee.BreakTimeRegular = Helper.CalculateRegularBreak(employee);
 
             SaveEmployeeValues(employee);
             employee.TrackChanges(true);

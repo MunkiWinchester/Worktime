@@ -24,7 +24,12 @@ namespace Worktime.Business
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is TimeSpan ts)
-                return ts.ToFormatedString(true);
+            {
+                if(!bool.TryParse(parameter?.ToString(), out bool keepItUnder24Hrs))
+                    return ts.ToFormatedString(true);
+                else
+                    return ts.ToFormatedString(keepItUnder24Hrs);
+            }
 
             return new TimeSpan().ToString(@"hh\:mm");
         }

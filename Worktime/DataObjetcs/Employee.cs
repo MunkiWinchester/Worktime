@@ -19,23 +19,24 @@ namespace Worktime.DataObjetcs
 
         public Employee()
         {
-            BreakTimeRegular = new TimeSpan(0, 30, 0);
             IsoWeek = new IsoWeek();
             Times = new ObservableCollection<Times>();
             WeekWorkTimeRegular = new TimeSpan(40, 0, 0);
             WorkTimeRegular = new TimeSpan(8, 0, 0);
+            BreakTimeRegular = new TimeSpan(0, 30, 0);
             _isInitial = false;
         }
 
         [JsonConstructor]
-        public Employee(TimeSpan breakTimeRegular, IsoWeek isoWeek, ObservableCollection<Times> times,
-                        TimeSpan weekWorkTimeRegular, TimeSpan workTimeRegular)
+        public Employee(IsoWeek isoWeek, ObservableCollection<Times> times,
+                        TimeSpan weekWorkTimeRegular, TimeSpan workTimeRegular,
+                        TimeSpan breakTimeRegular)
         {
-            BreakTimeRegular = breakTimeRegular;
             IsoWeek = isoWeek;
             Times = times;
             WeekWorkTimeRegular = weekWorkTimeRegular;
             WorkTimeRegular = workTimeRegular;
+            BreakTimeRegular = breakTimeRegular;
             _isInitial = false;
         }
 

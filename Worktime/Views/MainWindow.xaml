@@ -214,8 +214,8 @@
                 Grid.Column="2"
                 Margin="5"
                 FilledProgressBarColor="{StaticResource WeekRed}"
-                MaximumLabel="{Binding Employee.WeekWorkTimeRegular, Converter={StaticResource TimeSpanConverter}}"
-                MinimumLabel="{Binding Employee.WeekWorkTimeReal, Converter={StaticResource TimeSpanConverter}}"
+                MaximumLabel="{Binding Employee.WeekWorkTimeRegular, Converter={StaticResource TimeSpanConverter}, ConverterParameter=false}"
+                MinimumLabel="{Binding Employee.WeekWorkTimeReal, Converter={StaticResource TimeSpanConverter}, ConverterParameter=false}"
                 ProgressBarColor="{StaticResource WeekGreen}"
                 ProgressBarValue="{Binding WeekPercentageValue}">
                 <Views1:ProgressbarView.ToolTip>

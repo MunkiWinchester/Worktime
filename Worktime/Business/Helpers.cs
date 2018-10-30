@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
+using Worktime.DataObjetcs;
 
 namespace Worktime.Business
 {
@@ -76,6 +77,15 @@ namespace Worktime.Business
             var uri = new UriBuilder(codeBase);
             var path = Uri.UnescapeDataString(uri.Path);
             return Path.GetDirectoryName(path);
+        }
+
+        public static TimeSpan CalculateRegularBreak(Employee employee)
+        {
+            return new TimeSpan(0, Convert.ToInt32(Math.Floor(
+                employee.WorkTimeReal <= employee.WorkTimeRegular
+                    ? employee.WorkTimeRegular.TotalHours
+                    : employee.WorkTimeReal.TotalHours / 3) * 15),
+                0);
         }
     }
 }
