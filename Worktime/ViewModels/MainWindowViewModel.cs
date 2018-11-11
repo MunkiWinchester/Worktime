@@ -138,7 +138,7 @@ namespace Worktime.ViewModels
             var result = editView.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                var (currentHasChanged, currentEmployee)= EmployeeManager.SaveEmployeeValues(employeeValues, Employee.IsoWeek);
+                var (currentHasChanged, currentEmployee) = EmployeeManager.SaveEmployeeValues(employeeValues, Employee.IsoWeek);
                 if (currentHasChanged)
                 {
                     Employee = currentEmployee;

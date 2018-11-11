@@ -29,6 +29,17 @@ namespace Worktime.DataObjetcs
             Year = year;
         }
 
+        public bool IsCurrent
+        {
+            get
+            {
+                var currentIsoWeek = DateTime.UtcNow.Iso8601WeekOfYear();
+                if (Equals(currentIsoWeek))
+                    return true;
+                return false;
+            }
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is IsoWeek otherIsoWekk)

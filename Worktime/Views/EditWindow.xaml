@@ -126,9 +126,15 @@
                                                             <DataTrigger Binding="{Binding End}" Value="{x:Null}">
                                                                 <Setter Property="Background" Value="Red" />
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding IsCurrent}" Value="True">
-                                                                <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
-                                                            </DataTrigger>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding IsCurrent}" Value="True" />
+                                                                    <Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:MetroWindow}}, Path=Employee.IsoWeek.IsCurrent}" Value="True" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <MultiDataTrigger.Setters>
+                                                                    <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+                                                                </MultiDataTrigger.Setters>
+                                                            </MultiDataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Grid.Style>
