@@ -15,31 +15,12 @@ namespace Worktime.Business
 {
     public static class EmployeeManager
     {
-        private static DirectoryInfo JsonSaveLocation
-        {
-            get
-            {
-                DirectoryInfo dirInfo = null;
-#if DEBUG
-                dirInfo = new DirectoryInfo(Path.Combine(Helper.GetApplicationDataDirectory, "Test"));
-#else
-                var location = Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-                location = Path.Combine(location, $".{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}",
-                                        DateTime.Now.Year.ToString());
-                if (!Directory.Exists(location))
-                    Directory.CreateDirectory(location);
-                dirInfo = new DirectoryInfo(location);
-#endif
-                return dirInfo;
-            }
-        }
-
         public static List<Employee> GetEmployeeValuesFromJson()
         {
             var conDic = new ConcurrentDictionary<string, Employee>();
             try
             {
-                var dirInfo = JsonSaveLocation;
+                var dirInfo = Helper.GetJsonSaveLocation();
                 if (dirInfo != null)
                 {
                     var fileInfos = dirInfo.GetFiles("*.json", SearchOption.TopDirectoryOnly);
@@ -74,7 +55,7 @@ namespace Worktime.Business
 
         private static Employee GetCurrentEmployeeValueFromJson()
         {
-            var dirInfo = JsonSaveLocation;
+            var dirInfo = Helper.GetJsonSaveLocation();
             if (dirInfo != null)
             {
                 var fileInfos = dirInfo.GetFiles(DateTime.Now.Iso8601WeekOfYear().FileName);
@@ -155,7 +136,7 @@ namespace Worktime.Business
                     Formatting = Formatting.Indented,
                     DateFormatHandling = DateFormatHandling.IsoDateFormat
                 });
-            var dirInfo = JsonSaveLocation;
+            var dirInfo = Helper.GetJsonSaveLocation();
             if (dirInfo != null)
                 using (var sw = new StreamWriter(Path.Combine(dirInfo.FullName, employee.IsoWeek.FileName)))
                 {

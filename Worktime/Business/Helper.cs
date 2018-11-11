@@ -24,18 +24,29 @@ namespace Worktime.Business
             return result;
         }
 
-        public static string GetExecutingDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-        public static string GetApplicationDataDirectory
+        public static DirectoryInfo GetJsonSaveLocation()
         {
-            get
-            {
-                var dir = $@"{Directory.GetParent(Path.GetDirectoryName(
-                            Assembly.GetExecutingAssembly().Location)).FullName}\Data";
-                if (!Directory.Exists(dir))
-                    Directory.CreateDirectory(dir);
-                return dir;
-            }
+            DirectoryInfo dirInfo = null;
+            var location = Path.Combine(GetBaseSaveDirectory(), DateTime.Now.Year.ToString());
+            if (!Directory.Exists(location))
+                Directory.CreateDirectory(location);
+            dirInfo = new DirectoryInfo(location);
+            return dirInfo;
+        }
+
+        public static string GetBaseSaveDirectory()
+        {
+            var location = string.Empty;
+#if DEBUG
+            location = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Test");
+#else
+            location = Path.Combine(
+                            Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)),
+                            $".{Assembly.GetExecutingAssembly().GetName().Name}");
+#endif
+            if (!Directory.Exists(location))
+                Directory.CreateDirectory(location);
+            return location;
         }
 
         public static Version GetCurrentVersion() => Assembly.GetExecutingAssembly().GetName().Version;

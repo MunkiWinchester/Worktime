@@ -174,7 +174,7 @@
     <Compile Include="Business\Converters.cs" />
     <Compile Include="Business\UiStyleManager.cs" />
     <Compile Include="DataObjetcs\Employee.cs" />
-    <Compile Include="Business\Helpers.cs" />
+    <Compile Include="Business\Helper.cs" />
     <Compile Include="DataObjetcs\IsoWeek.cs" />
     <Compile Include="DataObjetcs\TimeFrame.cs" />
     <Compile Include="Views\Tray\ContextMenu.xaml.cs">

@@ -7,7 +7,7 @@ namespace Worktime.Business
     public sealed partial class Settings
     {
         private static SettingsObject defaultInstance;
-        private static string JsonFile = Path.Combine(Helper.GetApplicationDataDirectory, "Settings.json");
+        private static string JsonFile = Path.Combine(Helper.GetBaseSaveDirectory(), "Settings.json");
 
         public static SettingsObject Default
         {

@@ -103,9 +103,9 @@ namespace Worktime.Business
         {
             var target = (FileTarget) LogManager.Configuration.FindTargetByName("file");
             target.FileName =
-                Path.Combine(Helper.GetApplicationDataDirectory, "Logs", target.FileName.ToString().Replace("\'", ""));
+                Path.Combine(Helper.GetBaseSaveDirectory(), "Logs", target.FileName.ToString().Replace("\'", ""));
             target.ArchiveFileName =
-                Path.Combine(Helper.GetApplicationDataDirectory, "Logs", "Archive", target.FileName.ToString().Replace("\'", ""));
+                Path.Combine(Helper.GetBaseSaveDirectory(), "Logs", "Archive", target.FileName.ToString().Replace("\'", ""));
             LogManager.ReconfigExistingLoggers();
         }
     }
