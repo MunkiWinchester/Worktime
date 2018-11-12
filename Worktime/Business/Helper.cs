@@ -6,7 +6,7 @@ using Worktime.DataObjetcs;
 
 namespace Worktime.Business
 {
-    internal static class Helper
+    public static class Helper
     {
         /// <summary>
         /// Returns the calculated percentage of the actual and the regular time
@@ -90,12 +90,12 @@ namespace Worktime.Business
             return Path.GetDirectoryName(path);
         }
 
-        public static TimeSpan CalculateRegularBreak(Employee employee)
+        public static TimeSpan CalculateRegularBreak(TimeSpan workTimeReal, TimeSpan workTimeRegular)
         {
             return new TimeSpan(0, Convert.ToInt32(Math.Floor(
-                employee.WorkTimeReal <= employee.WorkTimeRegular
-                    ? employee.WorkTimeRegular.TotalHours
-                    : employee.WorkTimeReal.TotalHours / 3) * 15),
+                (workTimeReal <= workTimeRegular
+                    ? workTimeRegular.TotalHours
+                    : workTimeReal.TotalHours) / 3) * 15),
                 0);
         }
     }
